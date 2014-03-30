@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Logs</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+</head>
+<body>
+    <ul>
+        {{#log_days}}
+        <!-- Make the whole row tapable -->
+            <li>
+                <a href="{{filename}}">{{date}}</a>
+            </li>
+        {{/log_days}}
+    </ul>
+    <script src="/lib/jquery.js"></script>
+    <script>
+        $(function() {
+            $('a').bind('click', function(e){
+                e.preventDefault();
+                
+                var day = $(this).attr('href');
+                function checkAndDownload() {
+                    $.getJSON('/logs/ready/'+day, function(data) {
+                        if ( 'location' in data ) {
+                            window.location = data.location;
+                        }
+                        else {
+                            window.setTimeout(checkAndDownload, 250);
+                        }
+                    });
+                }
+                checkAndDownload();
+            });
+        })
+    </script>
+</body>
+</html>

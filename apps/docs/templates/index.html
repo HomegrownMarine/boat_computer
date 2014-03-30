@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sailing Documents</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        <style>
+            form {
+                text-align: right;
+                padding: 10px 10px;
+                background-color: #333;
+                color: #fff;
+            }
+
+            form label {
+                cursor: pointer;
+                padding: 10px 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <form method="post" action="/docs/upload" enctype="multipart/form-data">
+                <label> Upload
+                    <input type="file" name="doc" id="manualUpload" style="display:none;">
+                </label>
+            </form>
+        </div>
+        <ul>
+        {{#docs}}
+            <li><a href="{{link}}">{{name}}</a></li>
+        {{/docs}}
+        </ul>
+
+        <script src="/lib/jquery.js"></script>
+        <script>
+            $(function() {
+                $('#manualUpload').bind('change', function() {
+                    $('form').submit();
+                });
+            });
+        </script>
+    </body>
+</html>

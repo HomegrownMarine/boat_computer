@@ -1,0 +1,16 @@
+{
+    "settingsFile": "/race/data/settings.json",
+    "boatName": "Mayhem",
+    "log:data-dir": "/race/data/logs/",
+    "serialport": {
+        "path":"/dev/serial/by-id/usb-Arduino__www.arduino.cc__0042_64935343433351202160-if00",
+        "baudrate": 115200
+    },
+    "boatData:filter": ["IIGLL","IIRMC", "IIHDG", "IIRMB"],
+    "production": {
+        "port": 80
+    },
+    "development": {
+         "port": 3000
+    }
+}
