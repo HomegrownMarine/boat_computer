@@ -1,9 +1,9 @@
-//! nmea.js
-//! parse and format NMEA 0183 sentences.
+//! boat_data.js
+//! boat data module for when some other process is writing log files.
 //! version : 0.1
 //! homegrownmarine.com
-//! TODO: license
 
+//  NOTE: this is untested, but included in case it's useful.
 //  Module will "tail" latest file, switching on the hour
 //  parse messages and send out events that they've arrived
 //  maintain object of current state for /now
@@ -24,7 +24,7 @@ var nmea = require('./nmea');
 
 
 var config = require('../config.json');
-var DATA_DIR = config.logDataDir;
+var DATA_DIR = path.join(config['log:dataDir'];
 
 
 function boat_data() {

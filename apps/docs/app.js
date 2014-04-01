@@ -1,3 +1,10 @@
+//! docs/app.js
+//! Front end for downloading all docs in the docs/ folder, and
+//! uploading new docs.
+//! version : 0.1
+//! homegrownmarine.com
+
+
 var express = require('express');
 var path = require('path');
 var fs = require('fs');

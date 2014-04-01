@@ -1,17 +1,30 @@
+//! settings.js
+//! Generic module to save/load app settings from disk.  All
+//! settings are stored in one file.
+//! version : 0.1
+//! homegrownmarine.com
 
 var console = require('console');
 var fs = require('fs');
 var _ = require('underscore-node');
 
-var config = require('../config.json');
 
-var PERSISTENCE_STORE = config.settingsFile;
+function getConfigs() {
+    var allConfigs = require('../config.json');
+    var env = process.env.NODE_ENV || 'development';
 
+    console.info('env', env);
+    //copy environment specific configs
+    return _.extend(allConfigs, allConfigs[env]);
+}
+var config = getConfigs();
+
+var settings_filename = config.settingsFile;
 var persistence = null;
 
 function load() {
     try {
-        var fileContents = fs.readFileSync(PERSISTENCE_STORE,'utf8'); 
+        var fileContents = fs.readFileSync(settings_filename,'utf8'); 
         persistence = JSON.parse(fileContents);
     }
     catch(e) {
@@ -22,12 +35,14 @@ function load() {
 
 function save() {
     var jsonStr = JSON.stringify(persistence);
-    fs.writeFile(PERSISTENCE_STORE, jsonStr, function(err) {
+    fs.writeFile(settings_filename, jsonStr, function(err) {
         if (err) {
             console.log(err);
         }
     });
 }
+
+module.exports.config = config;
 
 module.exports.get = function(key) {
     if ( persistence === null )
@@ -47,7 +62,3 @@ module.exports.set = function(key, value) {
 
     save();
 };
-
-module.exports.setConfig = function(hash) {
-    config = _.extend(config, hash);
-}

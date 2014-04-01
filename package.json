@@ -1,6 +1,6 @@
 {
     "name": "boat_computer",
-    "description": "Ingests and processes data stream from sensors, and provides web based frontend for interacting the data.",
+    "description": "Ingests and processes data stream from sensors, and provides web based frontend for interacting with the data.",
     "version": "0.5.0",
     "main": "run.js",
     "dependencies": {

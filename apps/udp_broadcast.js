@@ -1,5 +1,9 @@
-// this app will monitor all nmea messages output by boat_data, and re-broadcast them
-// over udp.  Currently hardcoded port number, but could be configured.
+//! udp_broadcast.js
+//! Re-broadcast all NMEA messages over UDP.
+//! version : 1.0
+//! homegrownmarine.com
+
+// Currently hardcoded port number, but could be configured.
 
 var dgram = require('dgram');
 var broadcastSocket = null;

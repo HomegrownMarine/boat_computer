@@ -1,3 +1,9 @@
+//! boat_data.js
+//! load log file, and slowly replay.  Currently coded to assume hdg is
+//! broadcast at 10Hz.
+//! version : 0.7
+//! homegrownmarine.com
+
 var path = require('path');
 var util = require('util');
 var fs = require('fs');
@@ -7,15 +13,6 @@ var _ = require('underscore-node');
 var moment = require('moment');
 var nmea = require('./nmea');
 
-var config = require('../config.json');
-var DATA_DIR = config['log:data-dir'];
-
-var file = DATA_DIR+'14030812.txt';
-
-//module will "tail" latest file, switching on the hour
-// parse messages and send out events that they've arrived
-// maintain object of current state for /now
-//switch to new file when created
 
 var EventEmitter = require('events').EventEmitter;
 
@@ -31,8 +28,12 @@ function boat_data() {
 }
 util.inherits(boat_data, EventEmitter);
 
-boat_data.prototype.start = function() {
+boat_data.prototype.start = function(config) {
     if ( this._currentFile == null ) {
+        
+        //TODO: make this configurable
+        var file = path.join(config['log:dataDir'],'14030812.txt');
+
         this._currentFile = readline.createInterface({
             input: fs.createReadStream(file),
             output: process.stdout,
@@ -66,13 +67,28 @@ boat_data.prototype.processQueue = function() {
     setTimeout(_.bind(this.processQueue, this), 100);
 }
 
-boat_data.prototype.onNewLine = function(message) {
-    data = nmea.parse(message);  //TODO: where to parse NMEA
+
+// Fire events for nmea message, and parsed data (where appropriate)
+boat_data.prototype.emitData = function(message, data) {
+    if ( message ) {
+        this.emit('nmea', message);  
+    }
+
     if ( data ) {
         this.emit('data:'+data.type, data);
         this.emit('data', data);
-        this._current = _.extend( this._current, _.omit(data, 'msg','type') );
+        this._current = _.extend( this._current, _.omit(data, 'message','type') );
     }
+};
+
+boat_data.prototype.onNewLine = function(message) {
+    message = message.trim();
+    var messageId = message.substring(1,6);
+
+    var data = nmea.parse(message);
+
+    this.emitData(message, data);
+
     if ( data && data.type == 'hdg' ) {
         return false;
     }
@@ -83,13 +99,9 @@ boat_data.prototype.current = function() {
     return this._current;
 }
 boat_data.prototype.broadcast = function(message, data) {
-    if ( data && !message ) {
+    if ( data && message === null ) {
         message = nmea.format(data);    
     }
-
-    if ( data ) {
-        this.emit('data:'+data.type, data);
-        this.emit('data', data);
-    }
+    this.emitData(message, data);
 };
 module.exports = new boat_data();

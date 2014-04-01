@@ -2,7 +2,6 @@
 //! parse and format NMEA 0183 sentences.
 //! version : 0.1
 //! homegrownmarine.com
-//! TODO: license
 
 var console = require('console');
 var moment = require('moment');
@@ -10,10 +9,25 @@ var moment = require('moment');
 //TODO: move to util class
 var coordinate = {
     parse: function(string, cardinalDir) {
-        var a = '12228.5660,W';
+        var value = +string;
+        var degrees = parseInt(value/100);
+        value -= degrees*100;
+        degrees += value / 60.0;
+        return (cardinalDir == 'S' || cardinalDir == 'W'?-1:1) * degrees;
     },
     format: function(value, latOrLon) {
+        var direction = (value >= 0 ? 'E':'W');
+        if (latOrLon === 'lat') {
+            direction = (value >= 0 ? 'N':'S');
+        }
 
+        value = Math.abs(value);
+        var degrees = parseInt(value);
+
+        //TODO: pad?
+        var string = ''+degrees+((value-degrees)*60).toFixed(6);
+
+        return [string, direction];
     }
 };
 
@@ -66,16 +80,13 @@ module.exports.parsers = parsers;
 */
 parsers.RMC = {
     parse: function(message,parts) {
-        var latParts = parts[3].split('.');
-        var lonParts = parts[5].split('.');
-
         var data = {
             msg: message,
             type: 'rmc',
-            lat: (parts[4] == 'N'?1:-1) * (+latParts[0] / 100 + (latParts[0]%100+(latParts[1]/(10^latParts[1].length)))/60.0),
-            latStr: parts[3],
-            lon: (parts[6] == 'E'?1:-1) * (+lonParts[0] / 100 + (lonParts[0]%100+(lonParts[1]/(10^lonParts[1].length)))/60.0),
-            lonStr: parts[5],
+            lat: coordinate.parse(parts[3],parts[4]),
+            latStr: parts[3]+','+parts[4],
+            lon: coordinate.parse(parts[5],parts[6]),
+            lonStr: parts[5]+','+parts[6],
             time: moment.utc(parts[9]+' '+parts[1], "DDMMYY HHmmssS"),
             variation: +parts[10] * (parts[11] == 'E'?-1:1)
         };
@@ -83,7 +94,7 @@ parsers.RMC = {
         if (parts[7])
             data.sog = +parts[7];
         if (parts[8])
-            data.cog = parts[8];
+            data.cog = +parts[8];
 
         return data;
     }
@@ -128,7 +139,7 @@ parsers.RMB = {
             toLat[0],
             toLat[1],
             toLon[0],
-            toLat[1],
+            toLon[1],
             data.dtw.toFixed(1),
             data.btw.toFixed(0),
             data.vmgw.toFixed(2),
@@ -206,8 +217,8 @@ parsers.MWV = {
             speed = 'tws';
         }
 
-        data[angle] = +parts[1]
-        data[angle] = +parts[3]     //assumes K, TODO: unit conversion
+        data[angle] = +parts[1];
+        data[angle] = +parts[3];     //assumes K, TODO: unit conversion
 
         return data;
     },
@@ -253,7 +264,7 @@ parsers.VHW = {
         return {
             msg: message,
             type: 'vhw',
-            speed: +parts[5]  //TODO: may need to unit convert
+            speed: +parts[5]  //TODO: may need to unit convert if [5] isn't populated
         };
     }
 };
@@ -341,7 +352,6 @@ module.exports.parse = function(message) {
 
     try {
         message = message.substring(1,message.length-3); //trim xsum and $
-
         var type = message.substring(2,5);
 
         if ( type in parsers && parsers[type].parse ) {
@@ -357,8 +367,8 @@ module.exports.parse = function(message) {
 };
 
 module.exports.format = function(data) {
-    if ( data.type && data.type in parsers && parsers[data.type].format ) {
-        var message = parsers[data.type].format(data);
+    if ( data.type && data.type.toUpperCase() in parsers && parsers[data.type.toUpperCase()].format ) {
+        var message = parsers[data.type.toUpperCase()].format(data);
         return '$' + message + checksum(message);
     }
 

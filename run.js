@@ -1,3 +1,9 @@
+//! run.js
+//! Homegrown Marine boat_computer main process
+//! version : 0.5
+//! homegrownmarine.com
+
+
 var path = require('path');
 var fs = require('fs');
 var exec = require('child_process').exec;
@@ -7,8 +13,8 @@ var moment = require('moment');
 var handlebars = require('handlebars');
 var express = require('express');
 
-var config = require('./config.json');
 
+//TODO: connection logging
 
 function loadApps(server, boat_data, settings) {
     var links = [];
@@ -43,16 +49,18 @@ if ( _.contains(process.argv, 'replay') ) {
     boat_data_module = './modules/boat_data_replay';
 }
 
+var settings = require('./modules/settings');
+
 var boat_data = require(boat_data_module);
-boat_data.start();
-var settings = require('./modules/settings', {'data-dir':''});
+boat_data.start(settings.config);
+
 
 var server = express();
 server.use(express.urlencoded());
 server.use(express.multipart());
 
 
-if ( !_.contains(process.argv, 'replay') ) {
+if ( settings.get('syncSystemTime') ) {
     var lastTimeSync = 0;
 
     //on GPS message, set the system time every 120 seconds
@@ -84,11 +92,11 @@ server.get('/', function(req, res) {
     //todo: consider using express's template engine for this.
     var index = handlebars.compile(fs.readFileSync(path.join(__dirname,'www/templates/index.html'), {encoding:'utf8'}));
     
-    res.send( index({boatName: config.boatName, links: links}) );
+    res.send( index({boatName: settings.get('boatName'), links: links}) );
 });
 
 
-server.set('port', process.env.PORT || 3000);
+server.set('port', settings.get('port'));
 var server = server.listen(server.get('port'), function() {
     console.info('Express server listening on port ' + server.address().port);
 });

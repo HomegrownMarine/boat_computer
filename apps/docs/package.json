@@ -1,5 +1,6 @@
 {
     "name": "docs",
+    "description": "Store pdfs on boat computer for easy access on the water.",
     "private": true,
     "main": "./app.js"
 }
