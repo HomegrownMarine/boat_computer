@@ -23,8 +23,8 @@ exports.load = function(server, boat_data, settings) {
 
     // do logging
     boat_data.on('nmea', function(message) {
-        var filename = path.join(data_dir, moment().format('YYYYMMDDHH')+'.txt');
-        fs.appendFile(filename, message);
+        var filename = path.join(data_dir, moment().format('YYMMDDHH')+'.txt');
+        fs.appendFile(filename, message+'\r\n');
     });
 
 
