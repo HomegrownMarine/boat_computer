@@ -1,4 +1,4 @@
-//! boat_data.js
+//! boat_data_replay.js
 //! load log file, and slowly replay.  Currently coded to assume hdg is
 //! broadcast at 10Hz.
 //! version : 0.7

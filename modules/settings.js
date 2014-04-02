@@ -4,6 +4,8 @@
 //! version : 0.1
 //! homegrownmarine.com
 
+// TODO: https://github.com/flatiron/nconf - looks like it might be a good replacement for this.
+
 var console = require('console');
 var fs = require('fs');
 var _ = require('underscore-node');

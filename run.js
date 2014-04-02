@@ -44,13 +44,16 @@ function loadApps(server, boat_data, settings) {
 
 
 //set up modules
-var boat_data_module = './modules/serial_boat_data';
-if ( _.contains(process.argv, 'replay') ) {
-    boat_data_module = './modules/boat_data_replay';
-}
-
 var settings = require('./modules/settings');
 
+//boat data module is configurable
+var boat_data_module = './modules/boat_data_replay';
+if ( settings.get('boatData:module') == 'serial' ) {
+    boat_data_module = './modules/boat_data_serial';
+}
+else if (settings.get('boatData:module') == 'tail') {
+    boat_data_module = './modules/boat_data_tail';
+}
 var boat_data = require(boat_data_module);
 boat_data.start(settings.config);
 

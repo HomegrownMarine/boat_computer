@@ -7,6 +7,7 @@
 //  Module will stream all NMEA data from serial port, broadcasting
 //  events for nmea data and parsed JSON data.
 
+//TODO : this should be considered a best practice and used to make a base class
 
 var path = require('path');
 var util = require('util');
