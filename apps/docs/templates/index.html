@@ -7,7 +7,7 @@
         <link rel="stylesheet" type="text/css" href="/css/main.css">
         <style>
             form {
-                text-align: right;
+                float: right;
                 padding: 10px 10px;
                 background-color: #333;
                 color: #fff;
@@ -15,12 +15,17 @@
 
             form label {
                 cursor: pointer;
-                padding: 10px 10px;
+                padding: 10px 12px;
+            }
+
+            h1 {
+                float: left;
             }
         </style>
     </head>
     <body>
-        <div>
+        <div class="header cf">
+            <h1>Sailing Documents</h1>
             <form method="post" action="/docs/upload" enctype="multipart/form-data">
                 <label> Upload
                     <input type="file" name="doc" id="manualUpload" style="display:none;">
