@@ -6,7 +6,11 @@
     <title>Logs</title>
     <link rel="stylesheet" type="text/css" href="/css/main.css">
 </head>
-<body>
+<body>    
+    <div class="header">
+        <h1>Logs</h1>
+    </div>
+    
     <ul>
         {{#log_days}}
         <!-- Make the whole row tapable -->
@@ -21,6 +25,8 @@
             $('a').bind('click', function(e){
                 e.preventDefault();
                 
+                //the purpose of this is to give the archive files enough time to be generated.
+                //check every 250ms to see if the file is ready
                 var day = $(this).attr('href');
                 function checkAndDownload() {
                     $.getJSON('/logs/ready/'+day, function(data) {

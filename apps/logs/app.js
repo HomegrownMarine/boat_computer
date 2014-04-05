@@ -9,7 +9,7 @@ var path = require('path');
 var util = require('util');
 var fs = require('fs');
 
-var _ = require('underscore-node');
+var _ = require('lodash');
 var moment = require('moment');
 
 var express = require('express');

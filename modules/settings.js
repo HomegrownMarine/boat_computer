@@ -8,7 +8,7 @@
 
 var console = require('console');
 var fs = require('fs');
-var _ = require('underscore-node');
+var _ = require('lodash');
 
 
 function getConfigs() {

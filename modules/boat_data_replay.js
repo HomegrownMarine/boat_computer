@@ -9,7 +9,7 @@ var util = require('util');
 var fs = require('fs');
 var readline = require('readline');
 
-var _ = require('underscore-node');
+var _ = require('lodash');
 var moment = require('moment');
 var nmea = require('./nmea');
 

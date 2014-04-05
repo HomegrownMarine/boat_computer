@@ -18,7 +18,7 @@ var fs = require('fs');
 var Tail = require('tail').Tail;
 var EventEmitter = require('events').EventEmitter;
 
-var _ = require('underscore-node');
+var _ = require('lodash');
 var moment = require('moment');
 var nmea = require('./nmea');
 

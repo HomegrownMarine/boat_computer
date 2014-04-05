@@ -8,7 +8,7 @@
 var express = require('express');
 var path = require('path');
 var fs = require('fs');
-var _ = require('underscore-node');
+var _ = require('lodash');
 
 var console = require('console');
 var handlebars = require('handlebars');
