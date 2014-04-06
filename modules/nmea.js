@@ -7,7 +7,7 @@ var console = require('console');
 var moment = require('moment');
 
 //TODO: move to util class
-var coordinate = {
+var coordinate = module.exports.coordinate = {
     parse: function(string, cardinalDir) {
         var value = +string;
         var degrees = parseInt(value/100);
@@ -37,7 +37,13 @@ var checksum = module.exports.checksum = function(message) {
     for ( var i=0; i < message.length; i++ ) {
         csum = csum ^ message.charCodeAt(i);
     }
-    return csum.toString(16);
+
+
+    csum = csum.toString(16);
+    if (csum.length == 1) {
+        csum = '0'+csum;
+    }
+    return csum.toUpperCase();
 };
 
 // Validate nmea0183 message, assumes first character is $.
@@ -351,8 +357,8 @@ module.exports.parse = function(message) {
     }
 
     try {
-        message = message.substring(1,message.length-3); //trim xsum and $
-        var type = message.substring(2,5);
+        message = message.substring(1, message.length-3); //trim xsum and $
+        var type = message.substring(2, 5);
 
         if ( type in parsers && parsers[type].parse ) {
             var parts = message.split(',');
@@ -369,7 +375,7 @@ module.exports.parse = function(message) {
 module.exports.format = function(data) {
     if ( data.type && data.type.toUpperCase() in parsers && parsers[data.type.toUpperCase()].format ) {
         var message = parsers[data.type.toUpperCase()].format(data);
-        return '$' + message + checksum(message);
+        return '$' + message + '*' + checksum(message);
     }
 
     return null;
