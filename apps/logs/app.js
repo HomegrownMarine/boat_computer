@@ -35,14 +35,16 @@ exports.load = function(server, boat_data, settings) {
     server.get('/logs/', function(req, res) {
         
         var logs = _(fs.readdirSync(data_dir))
-                    .filter(function(filename) { return filename.match(/\d{8}\./); })
-                    .map(function(filename) { return filename.substring(0,6); });
+                        .filter(function(filename) { return filename.match(/\d{8}\./); })
+                        .map(function(filename) { return filename.substring(0,6); })
+                        .sort()
+                        .reverse()
+                        .uniq()
+                        .map(function(filename) {
+                            return { filename: filename, date: moment(filename, "YYMMDD").format("MMM D, YYYY") };
+                        })
+                        .valueOf();
 
-        //TODO: _.groupBy to get hours in each
-        logs = _.uniq(logs.sort().reverse());
-        logs = _.map(logs, function(filename) {
-                        return { filename: filename, date: moment(filename, "YYMMDD").format("MMM D, YYYY") };
-                    });
 
         var index = handlebars.compile(fs.readFileSync(path.join(__dirname,'templates/index.html'), {encoding:'utf8'}));
         res.send( index({log_days:logs}) );

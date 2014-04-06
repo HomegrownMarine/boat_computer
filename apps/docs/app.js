@@ -19,12 +19,14 @@ exports.load = function(server) {
     //render list of all files in docs directory
     server.get('/docs/', function(req, res) {
         //TODO: consider using express's template engine for this.
-        var docs = _(fs.readdirSync(path.join(__dirname, 'docs/')).sort())
-                    .filter(function(filename) { return filename.charAt(0) != '.'; })
-                    .map(function(filename) { 
-                        var displayName = filename.substring(0,filename.length-4).replace(/[_-]/g, ' ');
-                        return {  link:filename, name:filename}; 
-                    });
+        var docs = _(fs.readdirSync(path.join(__dirname, 'docs/')))
+                        .sort()
+                        .filter(function(filename) { return filename.charAt(0) != '.'; })
+                        .map(function(filename) { 
+                            var displayName = filename.substring(0,filename.length-4).replace(/[_-]/g, ' ');
+                            return {  link:filename, name:filename}; 
+                        })
+                        .valueOf();
 
         var index = handlebars.compile(fs.readFileSync( path.join(__dirname,'templates/index.html'), {encoding:'utf8'}));
         res.send( index({docs:docs}) );
