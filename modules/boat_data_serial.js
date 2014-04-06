@@ -68,7 +68,7 @@ boat_data.prototype.onNewLine = function(message) {
     var messageId = message.substring(1,6);
 
     var data;
-    if ( _.contains(this._filters(messageId)) ) {
+    if ( !_.contains(this._filters, messageId) ) {
         data = nmea.parse(message);
     }
 
@@ -95,4 +95,4 @@ boat_data.prototype.broadcast = function(message, data) {
     }
 };
 
-module.exports = new boat_data();
+module.exports = boat_data;

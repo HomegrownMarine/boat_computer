@@ -47,14 +47,15 @@ function loadApps(server, boat_data, settings) {
 var settings = require('./modules/settings');
 
 //boat data module is configurable
-var boat_data_module = './modules/boat_data_replay';
+var boatDataModule = './modules/boat_data_replay';
 if ( settings.get('boatData:module') == 'serial' ) {
-    boat_data_module = './modules/boat_data_serial';
+    boatDataModule = './modules/boat_data_serial';
 }
 else if (settings.get('boatData:module') == 'tail') {
-    boat_data_module = './modules/boat_data_tail';
+    boatDataModule = './modules/boat_data_tail';
 }
-var boat_data = require(boat_data_module);
+var boatDataClass = require(boatDataModule);
+var boat_data = new boatDataClass();
 boat_data.start(settings.config);
 
 

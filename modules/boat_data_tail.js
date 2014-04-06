@@ -119,4 +119,4 @@ boat_data.prototype.broadcast = function(message, data) {
     }
 };
 
-module.exports = new boat_data();
+module.exports = boat_data;

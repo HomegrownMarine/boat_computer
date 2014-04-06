@@ -13,30 +13,30 @@ The Boat Computer has a modular architecture that makes it easy to add new proce
 
 ###Included Apps:###
 
-- docs: host racing related docs, so you have access to them on the water
+- *docs*: host racing related docs, so you have access to them on the water
 
-- logs: log NMEA 0183 sensor data to disk, so that it can be analysed later
+- *logs*: log NMEA 0183 sensor data to disk, so that it can be analysed later
 
-- polars.js__(coming soon)__: will calculate target heel, wind angles and speed given current wind speed
+- *udp_broadcast* : broadcasts nmea stream over UDP so that it can be used with iPhone and android apps
 
-- udp_broadcast.js : broadcasts nmea stream over UDP so that it can be used with iPhone and android apps
+- *polars* __(coming soon)__: will calculate target heel, wind angles and speed given current wind speed
 
-- complex_data.js __(coming soon)__: calculate set/drift, twd, etc
+- *complex_data* __(coming soon)__: calculate set/drift, twd, etc
 
 
 ###other app projects:###
 
-- [Homegrown Marine goto/](https://github.com/HomegrownMarine/goto): gives a web frontend for setting waypoints
+- [Homegrown Marine/goto/](https://github.com/HomegrownMarine/goto): gives a web frontend for setting waypoints
 
-- [Homegrown Marine web_instruments/](https://github.com/HomegrownMarine/web_instrument): turns a phone or tablet into another instrument display
+- [Homegrown Marine/web_instruments/](https://github.com/HomegrownMarine/web_instrument): turns a phone or tablet into another instrument display
 
 
 ## Install
 
 1. Install node.js and forever on boat PC
--- [PC](http://nodejs.org)
--- [Raspberry Pi](http://revryl.com/2014/01/04/nodejs-raspberry-pi/)
--- BeagleBone Black
+ - [PC](http://nodejs.org)
+ - [Raspberry Pi](http://revryl.com/2014/01/04/nodejs-raspberry-pi/)
+ - BeagleBone Black
 2. Copy boat_computer project and any desired apps to boat PC
 3. install node serial port 
 4. run '''npm install''' from the project directory
@@ -47,11 +47,11 @@ The Boat Computer has a modular architecture that makes it easy to add new proce
 
 Apps are the way of extending your boat computer.  They can be light-weight, just responding to data changes, or they can include a web based user interface component.  The boat computer will import, and try and call a ```load``` method on every file or directory in the ```apps/``` directory.  The ```load``` method will receive three arguments:  ```server```, ```boat_data```, and ```settings```.
 
-   module.exports.load = function(server, boat_data, settings)
+```module.exports.load = function(server, boat_data, settings)```
 
 ### server
 
-```server``` is the Boat Computer webserver.  It can serve simple static web pages and server dynamic programic interfaces into the sensor data.  It is an [express js](http://expressjs.com) server object.
+```server``` is the Boat Computer webserver.  It can serve simple static web pages and server dynamic programic interfaces into the sensor data.  It is an [express.js](http://expressjs.com) server object.
 
 ### settings
 

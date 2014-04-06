@@ -104,4 +104,4 @@ boat_data.prototype.broadcast = function(message, data) {
     }
     this.emitData(message, data);
 };
-module.exports = new boat_data();
+module.exports = boat_data;
