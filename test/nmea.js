@@ -80,19 +80,21 @@ describe('parsers', function() {
         assert.equal(actual, expected);
     });
 
-    // describe('RMC', function() {
-    //     var data = nmea.parse('$GPRMC,030000.6,A,4740.36415,N,12225.35953,W,000.02,059.5,160612,016.6,E*4A');
-    //     var expected = {
-    //         msg: 'GPRMC,030000.6,A,4740.36415,N,12225.35953,W,000.02,059.5,160612,016.6,E',
-    //         type: 'rmc',
-    //         lat: 47,
-    //         latStr: '4740.36415,N',
-    //         lon: -122,
-    //         lonStr: '12225.35953,W',
-    //         time: moment.utc('160612 030000', "DDMMYY HHmmssS"),
-    //         variation: -16.6
-    //     };
-    //     assert.deepEqual(data, expected)
-    // });
+    describe('RMC', function() {
+        it(' should parse', function() {
+            var data = nmea.parse('$GPRMC,030000.6,A,4740.36415,N,12225.35953,W,000.02,059.5,160612,016.6,E*4A');
+            var expected = {
+                msg: 'GPRMC,030000.6,A,4740.36415,N,12225.35953,W,000.02,059.5,160612,016.6,E',
+                type: 'rmc',
+                lat: 47,
+                latStr: '4740.36415,N',
+                lon: -122,
+                lonStr: '12225.35953,W',
+                time: moment.utc('160612 030000', "DDMMYY HHmmssS"),
+                variation: -16.6
+            };
+        });
+        // assert.deepEqual(data, expected)
+    });
 });
 

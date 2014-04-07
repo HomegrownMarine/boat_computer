@@ -61,15 +61,29 @@ describe('boat_data', function() {
 
     it(' emit data events for broadcast messages.', function(done){
         var data = {
-            type: 'att',
+            type: 'notype', //not formattable
             heel: 0.01,
             trim: 0.0
         };
-        boat_data.on('data', function(event_message) {
+        boat_data.on('data', function(event_data) {
+            assert.deepEqual(event_data, data);
             done();
         });
 
         boat_data.broadcast(null, data);
     });
 
+    it(' emit data events for broadcast messages.', function(done){
+        var data = {
+            type: 'notype', //not formattable
+            heel: 0.01,
+            trim: 0.0
+        };
+        boat_data.on('data', function(event_data) {
+            assert.deepEqual(event_data, data);
+            done();
+        });
+
+        boat_data.broadcast(data);
+    });
 });

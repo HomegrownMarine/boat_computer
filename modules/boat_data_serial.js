@@ -84,6 +84,11 @@ boat_data.prototype.current = function() {
 // Broadcast a new piece of data.  If a NMEA message is supplied,
 // or generatable, it will be broadcast on the NMEA network as well
 boat_data.prototype.broadcast = function(message, data) {
+    if ( message != null && !_.isString(message) ) {
+        data = message;
+        message = null;
+    }
+
     if ( data && !message ) {
         message = nmea.format(data);    
     }
