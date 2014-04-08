@@ -328,7 +328,7 @@ parsers.VDR = {
     Example Messages:
     $TIROT,-20.3,A*27 */
 parsers.ROT = {
-    parse: function(message,parts) {
+    parse: function(message, parts) {
         return {
             msg: message,
             type: 'rot',
@@ -337,9 +337,21 @@ parsers.ROT = {
     }
 };
 
+
+// $IIDPT,075.1,-1.0,*43
+parsers.DPT = {
+    parse: function(message, parts) {
+        return {
+            msg: message,
+            type: 'dpt',
+            depth: +parts[1]        //TODO: more
+        };
+    }
+};
+
 // $YXXDR,A,0.4,D,PTCH,A,-4.0,D,ROLL*70
 parsers.XDR = {
-    parse: function(message,parts) {
+    parse: function(message, parts) {
         return {
             msg: message,
             type: 'xdr',

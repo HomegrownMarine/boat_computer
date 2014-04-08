@@ -17,6 +17,7 @@ function attachBroadcastSocket(boat_data) {
     
     var onMessage = function(message) {
         var buffer = new Buffer(message);
+        //TODO: buffer may overflow
         socket.send(buffer, 0, buffer.length, broadcastPort, broadcastAddress);
     }
 
