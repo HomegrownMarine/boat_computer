@@ -20,17 +20,17 @@ polarTable.prototype.getInterpolatedValue = function(tws, key, upwind) {
     var appropriateTargets = this.targets[upwind?'up':'down'];
     var twspeeds = _.keys(appropriateTargets);
 
-    var found = [];
+    var found = [0,0];
     for (var i=1; i < twspeeds.length; i++) {
         if ( tws < twspeeds[i] ) {
-            found[1] = twspeeds[i][key];
-            found[0] = twspeeds[i-1][key];
+            found[1] = twspeeds[i];
+            found[0] = twspeeds[i-1];
             break;
         }
     }
-
-    var percentFirst = (tws-found[0]) / (found[1]-found[0]);
-    var interpolatedValue = percentFirst * found[0] + (1-percentFirst) * found[1];
+    
+    var percentFirst = 1-(tws-found[0]) / (found[1]-found[0]);
+    var interpolatedValue = percentFirst * appropriateTargets[found[0]][key] + (1-percentFirst) * appropriateTargets[found[1]][key];
     return interpolatedValue;    
 }
 
@@ -83,12 +83,15 @@ polarTable.fromFile = function(filename, callback) {
             lee = +cols[4];
 
 
+        upwind = twa < 90;
         if ( !(tws in polars.all) ) {
             polars.all[tws] = {};
         }
 
         polars.all[tws][twa] = {speed: speed, heel: heel, lee: lee};
-        polars.targets[upwind?'up':'down'][tws] = {twa: twa, speed: speed, heel: heel};
+        if (target) {
+            polars.targets[upwind?'up':'down'][tws] = {twa: twa, speed: speed, heel: heel};
+        }
     });
 
     rd.on('close', function() {
@@ -96,6 +99,7 @@ polarTable.fromFile = function(filename, callback) {
     });
 }
 
+exports.polarTable = polarTable;
 
 exports.load = function(server, boat_data, settings) {
     var filename = settings.get('polars:table');

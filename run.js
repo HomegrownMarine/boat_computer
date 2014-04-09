@@ -65,17 +65,14 @@ server.use(express.multipart());
 
 
 if ( settings.get('syncSystemTime') ) {
-    var lastTimeSync = 0;
-
     //on GPS message, set the system time every 120 seconds
     //to keep the system time in sync
-    boat_data.on('data:rmc', function(data) {
-        var now = moment();
-        if ( now > lastTimeSync + 120 ) {
+    setInterval(function() {
+        boat_data.once('data:rmc', function(data) {
+            var now = moment();
             exec('date +%s -s "@' + now.unix() + '"' );
-            lastTimeSync = now;
-        }
-    });
+        });
+    }, 120000);
 }
 
 //global libs
