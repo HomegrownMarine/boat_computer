@@ -25,9 +25,16 @@ describe('polars', function() {
         });
 
         it(' should find speed.', function() {
-            assert.equal(table.targetSpeed(5, true), 4.619);
-            assert.equal(table.targetSpeed(4.5, true), 4.214);
             assert.equal(table.targetSpeed(4, true), 3.809);
+            assert.equal(table.targetSpeed(5, true), 4.619);
+            
+            assert.equal(table.targetSpeed(4, false), 3.830);
+            assert.equal(table.targetSpeed(5, false), 4.668);
+        });
+
+        it(' should interpolate speed.', function() {
+             assert.equal(table.targetSpeed(4.5, true), 4.214);
+             assert.closeTo(table.targetSpeed(4.5, false), 4.249, .00001);
         });
 
         it(' should find angle.', function() {
