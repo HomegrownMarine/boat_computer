@@ -22,9 +22,9 @@ function boat_data() {
     this._currentFile = null;
 
     //
-    this._current = {};
+    this._now = {};
     this._queue = [];
-    
+    this.nmea = nmea;
 }
 util.inherits(boat_data, EventEmitter);
 
@@ -77,7 +77,7 @@ boat_data.prototype.emitData = function(message, data) {
     if ( data ) {
         this.emit('data:'+data.type, data);
         this.emit('data', data);
-        this._current = _.extend( this._current, _.omit(data, 'message','type') );
+        this._now = _.extend( this._now, _.omit(data, 'message','type') );
     }
 };
 
@@ -85,7 +85,7 @@ boat_data.prototype.onNewLine = function(message) {
     message = message.trim();
     var messageId = message.substring(1,6);
 
-    var data = nmea.parse(message);
+    var data = this.nmea.parse(message);
 
     this.emitData(message, data);
 
@@ -95,12 +95,12 @@ boat_data.prototype.onNewLine = function(message) {
     return true;
 }
 
-boat_data.prototype.current = function() {
-    return this._current;
+boat_data.prototype.now = function() {
+    return this._now;
 }
 boat_data.prototype.broadcast = function(message, data) {
     if ( data && message === null ) {
-        message = nmea.format(data);    
+        message = this.nmea.format(data);    
     }
     this.emitData(message, data);
 };

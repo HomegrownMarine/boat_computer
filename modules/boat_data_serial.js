@@ -25,8 +25,9 @@ function boat_data() {
     EventEmitter.call(this);
 
     //
-    this._current = {};
+    this._now = {};
     this._filters = [];
+    this.nmea = nmea;
 };
 util.inherits(boat_data, EventEmitter);
 
@@ -58,7 +59,7 @@ boat_data.prototype.emitData = function(message, data) {
     if ( data ) {
         this.emit('data:'+data.type, data);
         this.emit('data', data);
-        this._current = _.extend( this._current, _.omit(data, 'message','type') );
+        this._now = _.extend( this._now, _.omit(data, 'message','type') );
     }
 };
 
@@ -69,16 +70,16 @@ boat_data.prototype.onNewLine = function(message) {
 
     var data;
     if ( !_.contains(this._filters, messageId) ) {
-        data = nmea.parse(message);
+        data = this.nmea.parse(message);
     }
 
     this.emitData(message, data);
 };
 
-//get our current state
-boat_data.prototype.current = function() {
+//get our now state
+boat_data.prototype.now = function() {
     //TODO: time stamp fields
-    return this._current;
+    return this._now;
 };
 
 // Broadcast a new piece of data.  If a NMEA message is supplied,
@@ -90,7 +91,7 @@ boat_data.prototype.broadcast = function(message, data) {
     }
 
     if ( data && !message ) {
-        message = nmea.format(data);    
+        message = this.nmea.format(data);    
     }
 
     this.emitData(message, data);

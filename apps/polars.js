@@ -106,7 +106,7 @@ exports.load = function(server, boat_data, settings) {
     if ( filename ) {
         polarTable.fromFile(filename, function(polars) {
             setInterval(function() {
-                var now = boat_data.current();
+                var now = boat_data.now();
                 var upwind = Math.abs(now.twa) < 90;
                 var targets = {
                     targetSpeed: polars.targetSpeed(now.tws, upwind),

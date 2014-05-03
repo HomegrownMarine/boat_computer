@@ -82,7 +82,7 @@ server.use('/', express.static(path.join(__dirname, 'www')));
 
 //returns current set of data for boat
 server.get('/now', function(req, res){
-    res.send(boat_data.current());
+    res.send(boat_data.now());
 });
 
 
