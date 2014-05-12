@@ -6,16 +6,18 @@
 
 // CURRENTLY DISABLED :: untested, provided as example
 
+function formatTacktickMessage(data) {
+    var key = data.subtype === 'heading'?'FFP':'FFD';
+    key += data.index;
+
+    var parts = ["PTAK",key].concat(data.values);
+    return parts.join(',');
+};
+
 exports.load = function(server, boatData, settings) {
     //add tacktick formatter to boatData's nmea parser
     boatData.nmea.parsers.PTAK = {
-        format: function(data) {
-            var key = data.subtype === 'heading'?'FFP':'FFD';
-            key += data.index;
-
-            var parts = ["PTAK",key].concat(data.values);
-            return parts.join(',');
-        }
+        format: formatTacktickMessage
     };
 
     //every time we get a heading message, make a custom 

@@ -14,8 +14,6 @@ var handlebars = require('handlebars');
 var express = require('express');
 
 
-//TODO: connection logging
-
 function loadApps(server, boat_data, settings) {
     var links = [];
 
@@ -46,7 +44,7 @@ function loadApps(server, boat_data, settings) {
 //set up modules
 var settings = require('./modules/settings');
 
-//boat data module is configurable
+// boat data module is configurable
 var boatDataModule = './modules/boat_data_replay';
 if ( settings.get('boatData:module') == 'serial' ) {
     boatDataModule = './modules/boat_data_serial';
@@ -62,18 +60,8 @@ boat_data.start(settings.config);
 var server = express();
 server.use(express.urlencoded());
 server.use(express.multipart());
+//TODO: connection logging
 
-
-if ( settings.get('syncSystemTime') ) {
-    //on GPS message, set the system time every 120 seconds
-    //to keep the system time in sync
-    setInterval(function() {
-        boat_data.once('data:rmc', function(data) {
-            var now = moment();
-            exec('date +%s -s "@' + now.unix() + '"' );
-        });
-    }, 120000);
-}
 
 //global libs
 //TODO: less & compression middleware
@@ -86,18 +74,33 @@ server.get('/now', function(req, res){
 });
 
 
-var links = loadApps(server, boat_data, settings);
+//load installed apps
+var apps = loadApps(server, boat_data, settings);
 
 //used to make list of loaded apps on index page
 server.get('/', function(req, res) {
     //todo: consider using express's template engine for this.
     var index = handlebars.compile(fs.readFileSync(path.join(__dirname,'www/templates/index.html'), {encoding:'utf8'}));
     
-    res.send( index({boatName: settings.get('boatName'), links: links}) );
+    res.send( index({boatName: settings.get('boatName'), links: apps}) );
 });
 
 
+// start up webserver
 server.set('port', settings.get('port'));
 var server = server.listen(server.get('port'), function() {
     console.info('Express server listening on port ' + server.address().port);
 });
+
+
+// final random stuff
+if ( settings.get('syncSystemTime') ) {
+    //on GPS message, set the system time every 120 seconds
+    //to keep the system time in sync
+    setInterval(function() {
+        boat_data.once('data:rmc', function(data) {
+            var now = moment();
+            exec('date +%s -s "@' + now.unix() + '"' );
+        });
+    }, 120000);
+}
