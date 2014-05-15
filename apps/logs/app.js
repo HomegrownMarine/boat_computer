@@ -85,6 +85,7 @@ exports.load = function(server, boat_data, settings) {
             //add each file to the archive
             async.each(hourlyLogs, function(file, callback) {
                     archive.append(fs.createReadStream(path.join(data_dir, file)), { name: file })
+                    callback(null);
                 }, function(err) {
                     if (!err) archive.finalize();
             });
