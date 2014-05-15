@@ -6,6 +6,14 @@
 
 // CURRENTLY DISABLED :: untested, provided as example
 
+var deg = exports.deg = function deg(radians) {
+    return (radians*180/Math.PI + 360) % 360;
+}    
+
+var rad = exports.rad = function rad(degrees) {
+    return degrees * Math.PI / 180;
+}
+
 //the current is the difference of the speed and heading over ground
 //and the speed and heading over water
 var calcCurrents = function(speed, hdg, sog, cog) {
@@ -15,11 +23,11 @@ var calcCurrents = function(speed, hdg, sog, cog) {
     cog = rad(90.0 - cog);
     
     //break out x and y components of current vector
-    var current_x = sog * cos(cog) - speed * cos(hdg);
-    var current_y = sog * sin(cog) - speed * sin(hdg);
+    var current_x = sog * Math.cos(cog) - speed * Math.cos(hdg);
+    var current_y = sog * Math.sin(cog) - speed * Math.sin(hdg);
 
     //drift is the magnitude of the current vector
-    var drift = sqrt(current_x * current_x + current_y * current_y);
+    var drift = Math.sqrt(current_x * current_x + current_y * current_y);
     
     //set is the angle of the current vector (note we special case pure North or South)
     var set = 0;
@@ -28,7 +36,7 @@ var calcCurrents = function(speed, hdg, sog, cog) {
     }
     else {
         //normalize 0 - 360
-        set = (90.0 - deg(atan2(current_y, current_x)) + 360) % 360;
+        set = (90.0 - deg(Math.atan2(current_y, current_x)) + 360) % 360;
     }
 
     return { set: set, drift: drift };
