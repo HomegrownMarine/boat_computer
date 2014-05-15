@@ -8,6 +8,7 @@
 var path = require('path');
 var util = require('util');
 var fs = require('fs');
+var async = require('async');
 
 var _ = require('lodash');
 var moment = require('moment');
@@ -38,8 +39,8 @@ exports.load = function(server, boat_data, settings) {
                         .filter(function(filename) { return filename.match(/\d{8}\./); })
                         .map(function(filename) { return filename.substring(0,6); })
                         .sort()
-                        .reverse()
                         .uniq()
+                        .reverse()
                         .map(function(filename) {
                             return { filename: filename, date: moment(filename, "YYMMDD").format("MMM D, YYYY") };
                         })
@@ -81,11 +82,12 @@ exports.load = function(server, boat_data, settings) {
 
             archive.pipe(output);
 
-            _.each(hourlyLogs, function(file) {
-                archive.append(fs.createReadStream(path.join(data_dir, file)), { name: file })
+            //add each file to the archive
+            async.each(hourlyLogs, function(file, callback) {
+                    archive.append(fs.createReadStream(path.join(data_dir, file)), { name: file })
+                }, function(err) {
+                    if (!err) archive.finalize();
             });
-            
-            archive.finalize();
 
             res.send({'status':'archiving'});
         }
