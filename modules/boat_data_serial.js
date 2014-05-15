@@ -28,6 +28,7 @@ function boat_data() {
     this._now = {};
     this._filters = [];
     this.nmea = nmea;
+    this._serialPortReady = false;
 };
 util.inherits(boat_data, EventEmitter);
 
@@ -42,10 +43,13 @@ boat_data.prototype.addFilters = function(filters) {
 boat_data.prototype.start = function(config) {
     this.addFilters(config['boatData:filter']);
 
+    var _this = this;
     this.serialPort = new SerialPort(config.serialport.path, {
-        baudrate: config.serialport.baudrate,
-        parser: serialport.parsers.readline("\r\n")
-    });
+            baudrate: config.serialport.baudrate,
+            parser: serialport.parsers.readline("\r\n")
+        }, function() {
+            _this._serialPortReady = true;
+        });
 
     this.serialPort.on('data', _.bind(this.onNewLine, this));
 };
@@ -96,7 +100,7 @@ boat_data.prototype.broadcast = function(message, data) {
 
     this.emitData(message, data);
 
-    if ( message ) {
+    if ( message && this._serialPortReady ) {
         this.serialPort.write(message);
     }
 };
