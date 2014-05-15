@@ -21,7 +21,7 @@ var calcCurrents = function(speed, hdg, sog, cog) {
     //convert cog and hdg to radians, with north right
     hdg = rad(90.0 - hdg);
     cog = rad(90.0 - cog);
-    
+
     //break out x and y components of current vector
     var current_x = sog * Math.cos(cog) - speed * Math.cos(hdg);
     var current_y = sog * Math.sin(cog) - speed * Math.sin(hdg);
@@ -48,6 +48,8 @@ exports.load = function(server, boatData, settings) {
         //first, get the latest boat data
         var data = boatData.now();
         
+        if ( isNaN(data.speed*data.hdg*data.sog*data.cog) ) return;
+
         //then use it to calculate the current vector
         var currents = calcCurrents( data.speed, data.hdg, data.sog, data.cog );
 
