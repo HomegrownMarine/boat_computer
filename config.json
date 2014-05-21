@@ -1,6 +1,8 @@
 {
     "settingsFile": "/race/data/settings.json",
     "boatName": "Project Mayhem",
+    
+    "disabledApps": ["serialGPS"],
     "log:dataDir": "/race/data/logs/",
     
     "serialport": {

@@ -15,15 +15,20 @@ var express = require('express');
 
 
 function loadApps(server, boat_data, settings) {
+    var disabledApps = settings.get('disabledApps') || [];
+
     var links = [];
 
     var apps = fs.readdirSync(path.join(__dirname,'apps/'));
     //don't try and load hidden files
-    //don't load files that begin with _ -- simple way to disable app
-    apps = _.filter(apps, function(filename) { return filename.charAt(0) != '.' && filename.charAt(0) != '_' });
+    apps = _.filter(apps, function(filename) { return filename.charAt(0) != '.' });
 
     _.each(apps, function(app) {
+        var appName = path.basename(app, '.js')
+        if ( _.contains(disabledApps, appName) ) return;
+
         console.info('loading app: ', app);
+
         var app_path = path.join(__dirname, 'apps', app);
         try {
             var link = require(app_path).load( server, boat_data, settings );
@@ -99,7 +104,7 @@ if ( settings.get('syncSystemTime') ) {
     //to keep the system time in sync
     setInterval(function() {
         boat_data.once('data:rmc', function(data) {
-            var now = moment();
+            var now = data['time'];
             exec('date +%s -s "@' + now.unix() + '"' );
         });
     }, 120000);
