@@ -1,0 +1,15 @@
+[Unit]
+Description=HomeGrown Marine Boat Computer
+ConditionPathExists=|/usr/bin/node
+After=network.target
+
+[Service]
+WorkingDirectory=/race/node/boat_computer
+Environment="NODE_ENV=production"
+ExecStart=/usr/bin/node run.js
+SyslogIdentifier=boat_computer
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
