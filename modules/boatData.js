@@ -13,49 +13,44 @@ var path = require('path');
 var util = require('util');
 var fs = require('fs');
 
-var serialport = require("serialport");
-var SerialPort = serialport.SerialPort; // localize object constructor
+var SerialInput = require('./serialInput');
 var EventEmitter = require('events').EventEmitter;
 
 var _ = require('lodash');
 var moment = require('moment');
 var nmea = require('./nmea');
 
-function boat_data() {
+function BoatData(sources) {
     EventEmitter.call(this);
 
     //
     this._now = {};
-    this._filters = [];
     this.nmea = nmea;
-    this._serialPortReady = false;
-};
-util.inherits(boat_data, EventEmitter);
 
-// Filter some messages from the data stream entirely
-boat_data.prototype.addFilters = function(filters) {
-    if ( filters ) {
-        this._filters = _.union(this._filters, filters);    
-    }
+    this._sources = _.map(sources, function(config) {
+        if ( 'driver' in config ) {
+            var driver = require(config.driver)
+            return new driver(config);
+        }
+        //default to serial driver
+        return new SerialInput(config);
+    });
 };
+util.inherits(BoatData, EventEmitter);
 
 // Start message pump
-boat_data.prototype.start = function(config) {
-    this.addFilters(config['boatData:filter']);
-
+BoatData.prototype.start = function() {
     var _this = this;
-    this.serialPort = new SerialPort(config.serialport.path, {
-            baudrate: config.serialport.baudrate,
-            parser: serialport.parsers.readline("\r\n")
-        }, function() {
-            _this._serialPortReady = true;
+    _.each( this._sources, function(source) {
+        source.start();
+        source.on('message', function(message) {
+            _this.onMessage.call(_this, message, source);
         });
-
-    this.serialPort.on('data', _.bind(this.onNewLine, this));
+    });
 };
 
 // Fire events for nmea message, and parsed data (where appropriate)
-boat_data.prototype.emitData = function(message, data) {
+BoatData.prototype.emitData = function(message, data) {
     if ( message ) {
         this.emit('nmea', message);  
     }
@@ -68,27 +63,31 @@ boat_data.prototype.emitData = function(message, data) {
 };
 
 //handle new message from message pump (Tail)
-boat_data.prototype.onNewLine = function(message) {
+BoatData.prototype.onMessage = function(message, sender) {
     message = message.trim();
     var messageId = message.substring(1,6);
 
-    var data;
-    if ( !_.contains(this._filters, messageId) ) {
-        data = this.nmea.parse(message);
-    }
+    // re-broadcast (ie. MUX)
+    _.each(this._sources, function(source) {
+        if (sender != source) {
+            source.write(message);
+        }
+    })
+
+    var data = this.nmea.parse(message);
 
     this.emitData(message, data);
 };
 
 //get our now state
-boat_data.prototype.now = function() {
+BoatData.prototype.now = function() {
     //TODO: time stamp fields
     return this._now;
 };
 
 // Broadcast a new piece of data.  If a NMEA message is supplied,
 // or generatable, it will be broadcast on the NMEA network as well
-boat_data.prototype.broadcast = function(message, data) {
+BoatData.prototype.broadcast = function(message, data) {
     if ( message != null && !_.isString(message) ) {
         data = message;
         message = null;
@@ -100,9 +99,12 @@ boat_data.prototype.broadcast = function(message, data) {
 
     this.emitData(message, data);
 
-    if ( message && this._serialPortReady ) {
-        this.serialPort.write(message);
+    // send message to all streams
+    if ( message ) {
+        _.each( this._sources, function(source) {
+            source.write(message);
+        });
     }
 };
 
-module.exports = boat_data;
+module.exports.BoatData = BoatData;

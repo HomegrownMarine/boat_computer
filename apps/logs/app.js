@@ -35,6 +35,8 @@ exports.load = function(server, boat_data, settings) {
     // list log files, grouped by day
     server.get('/logs/', function(req, res) {
         
+
+        //TODO: write as async
         var logs = _(fs.readdirSync(data_dir))
                         .filter(function(filename) { return filename.match(/\d{8}\./); })
                         .map(function(filename) { return filename.substring(0,6); })

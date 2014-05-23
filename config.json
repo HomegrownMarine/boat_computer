@@ -3,22 +3,45 @@
     "boatName": "Project Mayhem",
     
     "disabledApps": ["serialGPS"],
+
     "log:dataDir": "/race/data/logs/",
     
-    "serialport": {
-        "path":"/dev/serial/by-id/usb-Arduino__www.arduino.cc__0042_64935343433351202160-if00",
-        "baudrate": 115200
-    },
+    "dataSources": [
+        {
+            "name": "garmin gps",
+            "path": "/dev/ttyO1",
+            "baud": 4800,
+            "whitelist": ["PGRME", "GPBOD", "GPBWC"]
+        },
+        {
+            "name": "adafruit gps",
+            "path": "/dev/ttyO4",
+            "baud": 9600
+        }
+    ],
     
-    "boatData:module": "serial",
-    "boatData:filter": ["IIGLL","IIRMC", "IIHDG", "IIRMB"],
-    
+    "exampleSources": [
+        {
+            "name": "gps2",
+            "path": "/dev/ttyO4",
+            "baud": 9600,
+            "write": false
+        }
+    ],
+
     "production": {
         "port": 80,
         "syncSystemTime": true
     },
     "development": {
          "port": 3000,
-         "boatData:module": "replay"
+         "dataSources": [{
+            "name": "replay",
+            "driver": "./replayInput",
+            "file": "/race/data/logs/14030812.txt"
+        }],
+        "disabledApps": ["serialGPS", "logs"]
     }
 }
+
+

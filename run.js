@@ -14,7 +14,7 @@ var handlebars = require('handlebars');
 var express = require('express');
 
 
-function loadApps(server, boat_data, settings) {
+function loadApps(server, boatData, settings) {
     var disabledApps = settings.get('disabledApps') || [];
 
     var links = [];
@@ -31,7 +31,7 @@ function loadApps(server, boat_data, settings) {
 
         var app_path = path.join(__dirname, 'apps', app);
         try {
-            var link = require(app_path).load( server, boat_data, settings );
+            var link = require(app_path).load( server, boatData, settings );
             if (link) {
                 links.push(link);
             }
@@ -50,22 +50,16 @@ function loadApps(server, boat_data, settings) {
 var settings = require('./modules/settings');
 
 // boat data module is configurable
-var boatDataModule = './modules/boat_data_replay';
-if ( settings.get('boatData:module') == 'serial' ) {
-    boatDataModule = './modules/boat_data_serial';
-}
-else if (settings.get('boatData:module') == 'tail') {
-    boatDataModule = './modules/boat_data_tail';
-}
-var boatDataClass = require(boatDataModule);
-var boat_data = new boatDataClass();
-boat_data.start(settings.config);
+var BoatData = require('./modules/boatData').BoatData;
+var boatData = new BoatData(settings.get('dataSources'));
+boatData.start();
 
 
 var server = express();
 server.use(express.urlencoded());
 server.use(express.multipart());
 //TODO: connection logging
+//TODO: update express version and use more focused file uploading
 
 
 //global libs
@@ -75,12 +69,12 @@ server.use('/', express.static(path.join(__dirname, 'www')));
 
 //returns current set of data for boat
 server.get('/now', function(req, res){
-    res.send(boat_data.now());
+    res.send(boatData.now());
 });
 
 
 //load installed apps
-var apps = loadApps(server, boat_data, settings);
+var apps = loadApps(server, boatData, settings);
 
 //used to make list of loaded apps on index page
 server.get('/', function(req, res) {
@@ -103,7 +97,7 @@ if ( settings.get('syncSystemTime') ) {
     //on GPS message, set the system time every 120 seconds
     //to keep the system time in sync
     setInterval(function() {
-        boat_data.once('data:rmc', function(data) {
+        boatData.once('data:rmc', function(data) {
             var now = data['time'];
             exec('date +%s -s "@' + now.unix() + '"' );
         });
