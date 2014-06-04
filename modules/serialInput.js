@@ -23,6 +23,9 @@ function SerialInput(options) {
     //
     this._options = _.extend({}, defaultOptions, options);
     this._serialPortReady = false;
+    if ( this._options.rateLimit > 0 ) {
+        this._lastSent = {};
+    }
 };
 util.inherits(SerialInput, EventEmitter);
 
@@ -57,12 +60,20 @@ SerialInput.prototype.write = function(message) {
 
     //TODO: ratelimiting
     if ( this._serialPortReady ) {
+        var messageId = message.substring(1,6);
 
         if ( 'whitelist' in this._options ) {
-            var messageId = message.substring(1,6);
             if ( !_.contains(this._options.whitelist, messageId) ) {
                 return;
             }
+        }
+
+        if ( this._options.rateLimit > 0 ) {
+            var now = new Date().getTime();
+            if ( messageId in this._lastSent && this._lastSent[messageId] + this._options.rateLimit > now ) {
+                return;
+            }
+            this._lastSent[messageId] = now;
         }
 
         try {

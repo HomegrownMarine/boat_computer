@@ -8,15 +8,23 @@
     
     "dataSources": [
         {
-            "name": "garmin gps",
+            "name": "Compass",
             "path": "/dev/ttyO1",
             "baud": 4800,
-            "whitelist": ["PGRME", "GPBOD", "GPBWC"]
+            "whitelist": ["HCHDG","YXXDR","ROT"]
+        },
+        {
+            "name": "Tacktick",
+            "path": "/dev/ttyO2",
+            "baud": 4800,
+            "rateLimit": 1000,
+            "whitelist": ["IIMWV","IIVHW","IIVLW","IIVWR","IIMTW","GPRMC","HCHDG","PTAK","IIRMB"]
         },
         {
             "name": "adafruit gps",
             "path": "/dev/ttyO4",
-            "baud": 9600
+            "baud": 9600,
+            "whitelist": ["GPRMC","GPGGA","GPGSA","GPGSV"]
         }
     ],
     

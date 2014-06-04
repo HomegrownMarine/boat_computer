@@ -72,7 +72,7 @@ BoatData.prototype.onMessage = function(message, sender) {
         if (sender != source) {
             source.write(message);
         }
-    })
+    });
 
     var data = this.nmea.parse(message);
 
