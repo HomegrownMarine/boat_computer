@@ -3,7 +3,7 @@
 //! version : 0.1
 //! homegrownmarine.com
 
-var console = require('console');
+var winston = require('winston');
 var moment = require('moment');
 
 //TODO: move to util class
@@ -381,7 +381,7 @@ module.exports.parse = function(message) {
         }
     }
     catch(e) {
-        console.log('Error parsing NMEA message :', e);
+        winston.error('Error parsing NMEA message :', e);
     }
 
     return null;

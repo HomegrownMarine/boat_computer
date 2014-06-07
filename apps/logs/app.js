@@ -16,7 +16,7 @@ var moment = require('moment');
 var express = require('express');
 var archiver = require('archiver');
 
-var console = require('console');
+var winston = require('winston');
 var handlebars = require('handlebars');
 
 exports.load = function(server, boat_data, settings) {
@@ -77,7 +77,7 @@ exports.load = function(server, boat_data, settings) {
                 //rename temp file, archive can now be downloaded
                 fs.rename(__dirname + '/zips/' + day + '.zip.tmp', __dirname + '/zips/' + day + '.zip', function(err){
                     if (err) {
-                        console.error('Error renaming zip file.', err);    
+                        winston.error('Error renaming zip file.', err);    
                     }
                 });
             });

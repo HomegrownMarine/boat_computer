@@ -8,11 +8,15 @@ var path = require('path');
 var fs = require('fs');
 var exec = require('child_process').exec;
 
+var express = require('express');
+var winston = require('winston');
+
 var _ = require('lodash');
 var moment = require('moment');
 var handlebars = require('handlebars');
-var express = require('express');
 
+var BoatData = require('./modules/boatData').BoatData;
+var settings = require('./modules/settings');
 
 function loadApps(server, boatData, settings) {
     var disabledApps = settings.get('disabledApps') || [];
@@ -27,7 +31,7 @@ function loadApps(server, boatData, settings) {
         var appName = path.basename(app, '.js')
         if ( _.contains(disabledApps, appName) ) return;
 
-        console.info('loading app: ', app);
+        winston.info('loading app: ', app);
 
         var app_path = path.join(__dirname, 'apps', app);
         try {
@@ -37,7 +41,7 @@ function loadApps(server, boatData, settings) {
             }
         }
         catch(e) {
-            console.error('failure trying to load ', app_path, e);
+            winston.error('failure trying to load ', app_path, e);
         }
     });
 
@@ -45,15 +49,36 @@ function loadApps(server, boatData, settings) {
     return links;
 };
 
+function initializeWinston(winston, settings) {
+    winston.remove(winston.transports.Console);
+
+    winston.add(winston.transports.Console, { 
+        level: 'info',
+        timestamp: true
+    });
+    
+    winston.add(winston.transports.File, { 
+        level: settings['winston:logLevel'],
+        timestamp: true,
+        filename: 'run.log',
+        dirname: settings['winston:logDir'],
+        maxsize: 10000000,
+        maxFiles: 10
+    });
+
+    winston.handleExceptions();
+}
+
+
+/// MAIN
+
+initializeWinston(winston, settings);
 
 //set up modules
-var settings = require('./modules/settings');
 
-// boat data module is configurable
-var BoatData = require('./modules/boatData').BoatData;
+// boat data module
 var boatData = new BoatData(settings.get('dataSources'));
 boatData.start();
-
 
 var server = express();
 server.use(express.urlencoded());
@@ -88,18 +113,21 @@ server.get('/', function(req, res) {
 // start up webserver
 server.set('port', settings.get('port'));
 var server = server.listen(server.get('port'), function() {
-    console.info('Express server listening on port ' + server.address().port);
+    winston.info('Express server listening on port ' + server.address().port);
 });
 
 
 // final random stuff
 if ( settings.get('syncSystemTime') ) {
-    //on GPS message, set the system time every 120 seconds
-    //to keep the system time in sync
-    setInterval(function() {
+    function setSystemTime() {
         boatData.once('data:rmc', function(data) {
             var now = data['time'];
             exec('date +%s -s "@' + now.unix() + '"' );
         });
-    }, 120000);
+    };
+
+    //on GPS message, set the system time every 120 seconds
+    //to keep the system time in sync
+    setSystemTime();
+    setInterval(setSystemTime, 120000);
 }

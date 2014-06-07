@@ -4,7 +4,9 @@
     
     "disabledApps": ["serialGPS"],
 
-    "log:dataDir": "/race/data/logs/",
+    "winston:logLevel": "debug",
+    "winston:logDir": "/race/data/logs/",
+    "log:dataDir": "/race/data/raw/",
     
     "dataSources": [
         {

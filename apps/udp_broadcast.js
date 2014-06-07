@@ -6,8 +6,9 @@
 // Currently hardcoded port number, but could be configured.
 
 var dgram = require('dgram');
-var broadcastSocket = null;
+var winston = require('winston');
 
+var broadcastSocket = null;
 var failureCount = 0;
 
 function attachBroadcastSocket(boat_data) {
@@ -22,13 +23,13 @@ function attachBroadcastSocket(boat_data) {
         }
         catch(e) {
             //TODO: buffer may overflow
-            console.error('buffer overflow? with: ' + JSON.stringify(message) );
+            winston.error('buffer overflow? with: ' + JSON.stringify(message) );
         }
     }
 
     socket.on('error', function(err) {
         failureCount++;
-        console.error("server error: " + failureCount + "\n" + err.stack);
+        winston.error("server error: " + failureCount + "\n" + err.stack);
 
         socket.close();
         boat_data.stopListening('nmea', onMessage);

@@ -1,7 +1,7 @@
-//! serial_boat_data.js
-//! monitor serial port, parse all NMEA messages incoming, and emit
+//! boatData.js
+//! Create data source objects, parse all NMEA messages incoming, and emit
 //! events for rest of app
-//! version : 0.1
+//! version : 0.5
 //! homegrownmarine.com
 
 //  Module will stream all NMEA data from serial port, broadcasting

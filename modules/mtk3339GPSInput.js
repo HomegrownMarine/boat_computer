@@ -1,12 +1,14 @@
-//! serial_port.js
-//! 
-//! version : 0.1
+//! mtk3339GPSInput.js
+//! SerialInput subclass for mtk3339 based GPS (see adafruit ultimate gps)
+//! Sends setup messages, to get ideal message rates and baud.  Translates
+//! messages into better formats, where necessary.
+//! version : 0.2
 //! homegrownmarine.com
 
 var util = require('util')
 var nmea = require('./nmea')
 
-var EventEmitter = require('events').EventEmitter;
+var SerialInput = require('./serialInput');
 
 var _ = require('lodash');
 
@@ -18,13 +20,13 @@ var defaultOptions = {
 
 function mkt3339GPSInput(options) {
     options = _.extend({}, defaultOptions, options);
-    EventEmitter.call(this, options);
+    SerialInput.call(this, options);
 
 
     //onstart
     //// serial.write('$PMTK314,0,1,0,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0*2C\r\n');
 };
-util.inherits(mkt3339GPSInput, EventEmitter);
+util.inherits(mkt3339GPSInput, SerialInput);
 
 //handle new message from message pump (Tail)
 mkt3339GPSInput.prototype.onNewLine = function(message) {

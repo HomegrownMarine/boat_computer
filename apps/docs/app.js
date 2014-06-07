@@ -10,7 +10,7 @@ var path = require('path');
 var fs = require('fs');
 var _ = require('lodash');
 
-var console = require('console');
+var winston = require('winston');
 var handlebars = require('handlebars');
 
 exports.load = function(server) {
@@ -39,7 +39,7 @@ exports.load = function(server) {
         if ( req.files.doc ) {
             fs.rename(req.files.doc.path, path.join(__dirname, 'docs/', req.files.doc.name), function(err){
                 if (err) {
-                    console.error('Error renaming upload file', err);    
+                    winston.error('Error renaming upload file', err);    
                 }
             });
         }
