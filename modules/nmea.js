@@ -83,6 +83,9 @@ module.exports.parsers = parsers;
     $GPRMC,225426,A,4741.9098,N,12225,2008,W,005.2,318.7,220412,018.0,E*65
     $GPRMC,152337,V,4741.0220,N,12224.3803,W,,,210412,018.2,E*74
     $GPRMC,030000.6,A,4740.36415,N,12225.35953,W,000.02,059.5,160612,016.6,E*4A 
+
+    -- NMEA 2.3 adds another column
+    $GPRMC,214930.000,A,4741.1764,N,12224.1899,W,0.02,0.00,010614,,,D*78
 */
 parsers.RMC = {
     parse: function(message,parts) {
