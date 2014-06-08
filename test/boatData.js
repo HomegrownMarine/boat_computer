@@ -1,17 +1,14 @@
 var assert = require('chai').assert;
-var moment = require('moment');
 
-var boat_data_serial = require('../modules/boat_data_serial.js');
-// boat_data_serial.prototype.start = function() {};
+var boatData = require('../modules/boatData.js');
 
-describe('boat_data', function() {
+describe('boatData', function() {
     var boat_data;
 
+
     beforeEach(function() {
-        boat_data = new boat_data_serial();
-        boat_data.serialPort = {
-            write: function() {}
-        };
+        //TODO: use test source.
+        boat_data = new boatData.BoatData();
     });
 
 

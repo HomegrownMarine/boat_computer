@@ -38,7 +38,7 @@ SerialInput.prototype.start = function() {
             parser: serialport.parsers.readline("\r\n")
         }, function() {
             _this._serialPortReady = true;
-            winston.info('%s: SerialPort Ready', _this.name);
+            winston.info('%s: SerialPort Ready', _this._options.name);
         });
 
     this.serialPort.on('data', _.bind(this.onNewLine, this));
@@ -51,12 +51,12 @@ SerialInput.prototype.onNewLine = function(message) {
     if ( 'whitelist' in this._options ) {
         var messageId = message.substring(1,6);
         if ( !_.contains(this._options.whitelist, messageId) ) {
-            winston.debug('%s.onNewLine: Message [%s] not whitelisted.  Supressing.', _this.name, messageId);
+            winston.debug('%s.onNewLine: Message [%s] not whitelisted.  Supressing.', this._options.name, messageId);
             return;
         }
     }
 
-    this.emit('message', message);
+    this.emit('message', message, this);
 };
 
 SerialInput.prototype.write = function(message) {
@@ -67,26 +67,26 @@ SerialInput.prototype.write = function(message) {
 
         if ( 'whitelist' in this._options ) {
             if ( !_.contains(this._options.whitelist, messageId) ) {
-                winston.debug('%s.write: Message [%s] not whitelisted.  Supressing.', _this.name, messageId);
+                winston.debug('%s.write: Message [%s] not whitelisted.  Supressing.', this._options.name, messageId);
                 return;
             }
         }
 
         if ( this._options.rateLimit > 0 ) {
             var now = new Date().getTime();
-            if ( messageId in this._lastSent && this._lastSent[messageId] + this._options.rateLimit > now ) {
-                winston.debug('%s.write: Message [%s] ratelimited.  Supressing.', _this.name, messageId);
+            if ( messageId in this._lastSent && this._lastSent[messageId] + (this._options.rateLimit * .9) > now ) {
+                winston.debug('%s.write: Message [%s] ratelimited.  Supressing.', this._options.name, messageId);
                 return;
             }
             this._lastSent[messageId] = now;
         }
 
         try {
-            winston.debug('%s.write: Message [%s] written.', _this.name, messageId);
-            this.serialPort.write(message);
+            winston.debug('%s.write: Message [%s] written.', this._options.name, messageId);
+            this.serialPort.write(message.trim()+'\r\n');
         }
         catch(e) {
-            winston.error('error with serial port '+this._options.name, message);
+            winston.error('%s.write: error reading serial: %s', this._options.name, message, e);
             throw e;
         }
     }

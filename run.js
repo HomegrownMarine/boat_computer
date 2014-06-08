@@ -58,15 +58,16 @@ function initializeWinston(winston, settings) {
     });
     
     winston.add(winston.transports.File, { 
-        level: settings['winston:logLevel'],
+        level: settings.get('winston:logLevel'),
         timestamp: true,
-        filename: 'run.log',
-        dirname: settings['winston:logDir'],
+        filename: settings.get('winston:logDir')+'run.log',
+        json: false,
         maxsize: 10000000,
         maxFiles: 10
     });
 
-    winston.handleExceptions();
+    winston.info('logging to dir: ' + settings.get('winston:logDir')+'run.log');
+    //winston.handleExceptions();
 }
 
 

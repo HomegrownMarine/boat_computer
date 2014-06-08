@@ -13,6 +13,8 @@ var path = require('path');
 var util = require('util');
 var fs = require('fs');
 
+var winston = require('winston');
+
 var SerialInput = require('./serialInput');
 var EventEmitter = require('events').EventEmitter;
 
@@ -67,10 +69,17 @@ BoatData.prototype.onMessage = function(message, sender) {
     message = message.trim();
     var messageId = message.substring(1,6);
 
+    winston.debug('BoatData: received [%s] from %s.', messageId, sender._options.name);
+
+    winston.debug('BoatData: writing to each: %s', _.map(this._sources, function(x){return x._options.name }) )
     // re-broadcast (ie. MUX)
     _.each(this._sources, function(source) {
         if (sender != source) {
+            winston.debug('BoatData: writing [%s] to %s.', messageId, source._options.name);
             source.write(message);
+        }
+        else {
+            winston.debug('BoatData: NOT writing [%s] to %s.', messageId, source._options.name);
         }
     });
 
