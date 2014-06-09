@@ -1,13 +1,14 @@
 {
-    "settingsFile": "/race/data/settings.json",
     "boatName": "Project Mayhem",
+
+    "settingsFile": "/race/data/settings.json",
     
     "disabledApps": ["tacktick", "goto", "calcs", "polars"],
 
-    "winston:logLevel": "debug",
+    "winston:logLevel": "info",
     "winston:logDir": "/race/data/logs/",
     
-    "log:dataDir": "/race/data/raw/",
+    "logs:dataDir": "/race/data/raw/",
     
     "dataSources": [
         {
@@ -50,9 +51,10 @@
          "dataSources": [{
             "name": "replay",
             "driver": "./replayInput",
-            "file": "/race/data/logs/14030812.txt"
+            "file": "/race/data/raw/14030812.txt"
         }],
-        "disabledApps": ["serialGPS", "logs"]
+        "disabledApps": [],
+        "logs:log": false
     }
 }
 

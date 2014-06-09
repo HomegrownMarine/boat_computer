@@ -19,38 +19,57 @@ var archiver = require('archiver');
 var winston = require('winston');
 var handlebars = require('handlebars');
 
-exports.load = function(server, boat_data, settings) {
-    var data_dir = settings.get("log:dataDir");
+exports.load = function(server, boatData, settings) {
+    var dataDir = settings.get("logs:dataDir");
 
     // do logging
-    boat_data.on('nmea', function(message) {
-        var filename = path.join(data_dir, moment().format('YYMMDDHH')+'.txt');
-        fs.appendFile(filename, message+'\r\n');
-    });
+    if ( settings.get("logs:log") !== false ) {
+        boatData.on('nmea', function(message) {
+            var filename = path.join(dataDir, moment().format('YYMMDDHH')+'.txt');
+            fs.appendFile(filename, message+'\r\n');
+        });
+    }
 
+
+    var indexTemplate = null;
+    fs.readFile(path.join(__dirname,'templates/index.html'), {encoding:'utf8'}, function(err, data) {
+        if (err) {
+            winston.error('logs: error loading template', err);
+            return;
+        }
+
+        indexTemplate = handlebars.compile(data);
+    });
 
     //enable log downloading
     server.use('/logs', express.static(path.join(__dirname, 'zips/')));
 
     // list log files, grouped by day
     server.get('/logs/', function(req, res) {
-        
+        if ( !indexTemplate ) {
+            res.send();
+            return;
+        }
 
-        //TODO: write as async
-        var logs = _(fs.readdirSync(data_dir))
-                        .filter(function(filename) { return filename.match(/\d{8}\./); })
-                        .map(function(filename) { return filename.substring(0,6); })
-                        .sort()
-                        .uniq()
-                        .reverse()
-                        .map(function(filename) {
-                            return { filename: filename, date: moment(filename, "YYMMDD").format("MMM D, YYYY") };
-                        })
-                        .valueOf();
+        fs.readdir(dataDir, function(err, files) {
+            if (err) {
+                winston.error('logs: error reading log dir', err);
+                return;
+            }
 
-
-        var index = handlebars.compile(fs.readFileSync(path.join(__dirname,'templates/index.html'), {encoding:'utf8'}));
-        res.send( index({log_days:logs}) );
+            var logs = _(files)
+                            .filter(function(filename) { return filename.match(/\d{8}\./); })
+                            .map(function(filename) { return filename.substring(0,6); })
+                            .sort()
+                            .uniq()
+                            .reverse()
+                            .map(function(filename) {
+                                return { filename: filename, date: moment(filename, "YYMMDD").format("MMM D, YYYY") };
+                            })
+                            .valueOf();
+            
+            res.send( indexTemplate({log_days:logs}) );
+        });
     });
 
     //TODO: way to reprocess a partial day
@@ -67,26 +86,24 @@ exports.load = function(server, boat_data, settings) {
             res.send({'status':'archiving'});
         }
         else {
-            //TODO: child process
-            var hourlyLogs = _.filter(fs.readdirSync(data_dir), function(filename) { return filename.substring(0,6) === day; });
+            // TODO: child process
+            var hourlyLogs = _.filter(fs.readdirSync(dataDir), function(filename) { return filename.substring(0,6) === day; });
 
             var output = fs.createWriteStream(zipFile+'.tmp');
             var archive = archiver('zip');
 
             output.on('close', function() {
-                //rename temp file, archive can now be downloaded
+                // rename temp file, archive can now be downloaded
                 fs.rename(__dirname + '/zips/' + day + '.zip.tmp', __dirname + '/zips/' + day + '.zip', function(err){
-                    if (err) {
-                        winston.error('Error renaming zip file.', err);    
-                    }
+                    if (err) winston.error('Error renaming zip file.', err);    
                 });
             });
 
             archive.pipe(output);
 
-            //add each file to the archive
+            // add each file to the archive
             async.each(hourlyLogs, function(file, callback) {
-                    archive.append(fs.createReadStream(path.join(data_dir, file)), { name: file })
+                    archive.append(fs.createReadStream(path.join(dataDir, file)), { name: file })
                     callback(null);
                 }, function(err) {
                     if (!err) archive.finalize();
