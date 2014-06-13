@@ -5,12 +5,18 @@
 //! version : 0.2
 //! homegrownmarine.com
 
-var util = require('util')
-var nmea = require('./nmea')
+var util = require('util');
+var nmea = require('./nmea');
+
+var _ = require('lodash');
+var winston = require('winston');
+
 
 var SerialInput = require('./serialInput');
 
-var _ = require('lodash');
+var serialport = require("serialport");
+var SerialPort = serialport.SerialPort; // local object constructor
+
 
 var defaultOptions = {
             "name": "default",
@@ -22,9 +28,49 @@ function mkt3339GPSInput(options) {
     options = _.extend({}, defaultOptions, options);
     SerialInput.call(this, options);
 
+    var _this = this;
 
-    //onstart
-    //// serial.write('$PMTK314,0,1,0,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0*2C\r\n');
+    var onLowSpeedConnect = function() {
+        winston.info('mkt3339GPS: onLowSpeedConnect');
+
+        // first, set baud to 115200
+        var message = 'PMTK251,115200';
+        _this.serialPort.write( nmea.format(message) + '\r\n' );
+
+        setTimeout(function() {
+            // reconnect after 500ms
+            _this.serialPort.close();
+
+            _this.serialPort = new SerialPort(_this._options.path, {
+                baudrate: 115200,
+                parser: serialport.parsers.readline("\r\n")
+            }, onHighSpeedConnect);
+
+            _this.serialPort.on('data', _.bind(_this.onNewLine, _this));
+        }, 500);
+    };
+
+    var onHighSpeedConnect = function() {
+        winston.info('mkt3339GPS: onHighSpeedConnect');
+
+        //set up message rates
+        var messages = ['PMTK220,200',  // set position fix to 5Hz
+                        'PMTK301,2',    // set DGPS to WAAS
+                        'PMTK314,0,1,0,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0']; // set update rates - multiples of position fix rate above
+
+        _.each(messages, function(message) {
+            _this.serialPort.write( nmea.format(message) + '\r\n' );
+        });
+
+        _this._serialPortReady = true;
+    };
+
+    this.start = function() {
+        _this.serialPort = new SerialPort(_this._options.path, {
+                baudrate: 9600,
+                parser: serialport.parsers.readline("\r\n")
+            }, onLowSpeedConnect);
+    };
 };
 util.inherits(mkt3339GPSInput, SerialInput);
 
@@ -32,13 +78,14 @@ util.inherits(mkt3339GPSInput, SerialInput);
 mkt3339GPSInput.prototype.onNewLine = function(message) {
     message = message.trim();
     
-    var messageId = message.substring(1,6);
+    var messageId = nmea.messageId(message);
     if ( 'whitelist' in this._options ) {
         if ( !_.contains(this._options.whitelist, messageId) ) {
             return;
         }
     }
 
+    //TODO: emit status as seperate message?
     if (messageId == "GPRMC") {
         message = mkt3339GPSInput.cleanUpRMC(message);
     }
@@ -61,5 +108,9 @@ mkt3339GPSInput.cleanUpRMC = function(message) {
     return '$' + message + '*' + nmea.checksum(message);
 }
 
+mkt3339GPSInput.prototype.close = function() {
+    this.serialPort.close();
+    this._serialPortReady = false;
+}
 
 module.exports = mkt3339GPSInput;

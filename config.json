@@ -14,8 +14,7 @@
         {
             "name": "Compass",
             "path": "/dev/ttyO2",
-            "baud": 4800,
-            "whitelist": ["HCHDG","YXXDR","ROT"]
+            "driver": "./H2183CompassInput"
         },
         {
             "name": "Tacktick",
@@ -27,9 +26,7 @@
         {
             "name": "adafruit gps",
             "path": "/dev/ttyO4",
-            "baud": 9600,
-            "driver": "./mtk3339GPSInput",
-            "whitelist": ["GPRMC","GPGGA","GPGSA","GPGSV"]
+            "driver": "./mtk3339GPSInput"
         }
     ],
     
