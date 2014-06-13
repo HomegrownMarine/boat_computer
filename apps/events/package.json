@@ -1,0 +1,6 @@
+{
+    "name": "events",
+    "description": "Record and maintain events during sailing.",
+    "private": true,
+    "main": "./app.js"
+}

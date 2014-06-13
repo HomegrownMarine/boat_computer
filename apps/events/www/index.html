@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Events</title>
+    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/events.css">
+</head>
+<body>
+    <ul class="large primary">
+        <li class="rigtune">
+            <h2>Rig Tune</h2>
+            <div class="content">
+                <form>
+                    <ul class="secondary">
+                        <li>
+                            <span class="label">H</span> <input type="text" name="H">
+                            <span class="plus" for="H">+</span><span class="minus" for="H">-</span>
+                        </li>
+                        <li>
+                            <span class="label">V</span> <input type="text" name="PV">
+                            <span class="plus" for="PV">+</span><span class="minus" for="PV">-</span>
+                        </li>
+                        <li>
+                            <span class="label">D1</span> <input type="text" name="PD1">
+                            <span class="plus" for="PD1">+</span><span class="minus" for="PD1">-</span>
+                        </li>
+                        <li>
+                            <span class="label">D2</span> <input type="text" name="PD2">
+                            <span class="plus" for="PD2">+</span><span class="minus" for="PD2">-</span>
+                        </li>
+                        <li>
+                            <span class="label">D2</span> <input type="text" name="SD2">
+                            <span class="plus" for="SD2">+</span><span class="minus" for="SD2">-</span>
+                        </li>
+                        <li>
+                            <span class="label">D1</span> <input type="text" name="SD1">
+                            <span class="plus" for="SD1">+</span><span class="minus" for="SD1">-</span>
+                        </li>
+                        <li>
+                            <span class="label">V</span> <input type="text" name="SV">
+                            <span class="plus" for="SV">+</span><span class="minus" for="SV">-</span>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </li>
+
+        <li class="sails">
+            <h2>Sails</h2>
+            <div class="content">
+            </div>
+        </li>
+
+        <li class="other">
+            <h2>Other</h2>
+            <div class="content">
+            </div>      
+        </li>
+    </ul>
+
+    <script src="/lib/jquery.js"></script>
+    <script src="/lib/underscore.js"></script>
+    <script>
+        $(function() {
+            $('.primary > li').not(':eq(0)').addClass('closed');
+
+            //load initial data
+            $.ajax({
+                    dataType: "json",
+                    url: '/events/current',
+                    cache: false,
+                    success: function(d) { 
+                        _.each(d, function(dataset, key) {
+                            var section = $('.'+key);
+                            _.each(dataset, function(datum, name) {
+                                section.find('[name='+name+']').val(datum);
+                            });
+                        });
+                    }
+                });
+
+            //on plus-minus click, adjust related value
+            $('.plus, .minus').click(function() {
+                var $this = $(this);
+                var forName = $this.attr('for');
+                var target = $this.siblings('[name='+forName+']');
+
+                var change = $this.hasClass('plus')?1:-1;
+
+                target.val( parseInt(target.val()) + change ).change();
+            });
+
+            //on any change, save
+            $('input').change(function() {
+                var key = 'rigtune';
+                var data = {};
+                $('.rigtune input').each( function() { 
+                    data[this.name] = this.value;
+                });
+
+                $.ajax({
+                    dataType: "json",
+                    url: "/events/record/rigtune",
+                    method: "post",
+                    data: data,
+                    type: "POST",
+                    success: function() {
+
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

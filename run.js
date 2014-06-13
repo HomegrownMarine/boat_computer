@@ -41,7 +41,7 @@ function loadApps(server, boatData, settings) {
             }
         }
         catch(e) {
-            winston.error('failure trying to load ', app_path, e);
+            winston.error('failure trying to load %s', app_path, e);
         }
     });
 
