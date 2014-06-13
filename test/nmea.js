@@ -3,6 +3,13 @@ var moment = require('moment');
 
 var nmea = require('../modules/nmea.js');
 
+describe('messageId', function() {
+    it(' should get the first token', function() {
+        assert.equal(nmea.messageId('$GPRMC,204658,A,4740.2949,N,12228.56'), 'GPRMC');
+        assert.equal(nmea.messageId('$PSIM1242,030000.6,A,4740.36415'), 'PSIM1242');        
+    });
+});
+
 describe('checksum', function(){
     it(' should calculate checksum correctly', function(){
         assert.equal(nmea.checksum('GPRMC,204658,A,4740.2949,N,12228.5660,W,005.4,300.8,100410,018.2'), '0A');
@@ -80,6 +87,12 @@ describe('parsers', function() {
         assert.equal(actual, expected);
     });
 
+    it(' should format strings', function() {
+        var expected = '$PAMTC,BAUD,38400*66';
+        var actual = nmea.format('PAMTC,BAUD,38400');
+
+        assert.equal(actual, expected);
+    })
     
     describe('RMC', function() {
         it(' should parse');

@@ -5,6 +5,7 @@
 
 var winston = require('winston');
 var moment = require('moment');
+var _ = require('lodash');
 
 //TODO: move to util class
 var coordinate = module.exports.coordinate = {
@@ -364,6 +365,11 @@ parsers.XDR = {
     }
 };
 
+module.exports.messageId = function(message) {
+    var end = message.indexOf(',');
+    return message.substring(1,end);
+};
+
 module.exports.parse = function(message) {
     message = message.trim(); //proper messages end in \r\n
 
@@ -387,11 +393,18 @@ module.exports.parse = function(message) {
     return null;
 };
 
+//TODO : format string or object
 module.exports.format = function(data) {
-    if ( data.type && data.type.toUpperCase() in parsers && parsers[data.type.toUpperCase()].format ) {
-        var message = parsers[data.type.toUpperCase()].format(data);
-        return '$' + message + '*' + checksum(message);
+    var message;
+    if ( _.isString(data) ) {
+        message = data;
+    }
+    else if ( data.type && data.type.toUpperCase() in parsers && parsers[data.type.toUpperCase()].format ) {
+        message = parsers[data.type.toUpperCase()].format(data);
     }
 
-    return null;
+    if (message) 
+        return '$' + message + '*' + checksum(message);
+    else
+        return null;
 };
