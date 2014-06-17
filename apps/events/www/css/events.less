@@ -19,8 +19,12 @@ ul.primary >li {
     }
 }
 
-ul.secondary >li {
-    padding: 5px;
+ul.secondary {
+    margin: 0;
+
+    >li {
+        padding: 8px 5px;
+    }
 }
 
 .rigtune {
@@ -36,13 +40,17 @@ ul.secondary >li {
 }
 
 // control styling
+.label.h {
+    margin-left: 60px;
+}
+
 .label {
-    width: 60px;
+    width: 20px;
     display: inline-block;
 }
 
-input[type=text] {
-    width: 80px;
+input[type=number] {
+    width: 30px;
 }
 
 .plus, .minus {
@@ -51,7 +59,7 @@ input[type=text] {
     -webkit-border-radius: 8px;
     text-align: center;
     display: inline-block;
-    margin-left: 8px;
+    margin-right: 8px;
     padding: 5px;
     width: 15px;
 }

@@ -59,5 +59,5 @@ exports.load = function(server, boatData, settings) {
         res.send({'ok':true});
     });
 
-    return {url:'/events/', title:'Event Tracking', priority: 10};
+    return {url:'/events/', title:'Tuning', priority: 1};
 };

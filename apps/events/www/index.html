@@ -15,38 +15,35 @@
                 <form>
                     <ul class="secondary">
                         <li>
-                            <span class="label">H</span> <input type="text" name="H">
+                            <span class="label h">H</span> <input type="number" name="H">
                             <span class="plus" for="H">+</span><span class="minus" for="H">-</span>
                         </li>
                         <li>
-                            <span class="label">V</span> <input type="text" name="PV">
                             <span class="plus" for="PV">+</span><span class="minus" for="PV">-</span>
+                            <input type="number" name="PV">
+                            <span class="label">V</span>
+                            <input type="number" name="SV">
+                            <span class="plus" for="SV">+</span><span class="minus" for="SV">-</span>
                         </li>
                         <li>
-                            <span class="label">D1</span> <input type="text" name="PD1">
                             <span class="plus" for="PD1">+</span><span class="minus" for="PD1">-</span>
-                        </li>
-                        <li>
-                            <span class="label">D2</span> <input type="text" name="PD2">
-                            <span class="plus" for="PD2">+</span><span class="minus" for="PD2">-</span>
-                        </li>
-                        <li>
-                            <span class="label">D2</span> <input type="text" name="SD2">
-                            <span class="plus" for="SD2">+</span><span class="minus" for="SD2">-</span>
-                        </li>
-                        <li>
-                            <span class="label">D1</span> <input type="text" name="SD1">
+                            <input type="number" name="PD1">
+                            <span class="label">D1</span>
+                            <input type="number" name="SD1">
                             <span class="plus" for="SD1">+</span><span class="minus" for="SD1">-</span>
                         </li>
                         <li>
-                            <span class="label">V</span> <input type="text" name="SV">
-                            <span class="plus" for="SV">+</span><span class="minus" for="SV">-</span>
+                            <span class="plus" for="PD2">+</span><span class="minus" for="PD2">-</span>
+                            <input type="number" name="PD2">
+                            <span class="label">D2</span> 
+                            <input type="number" name="SD2">
+                            <span class="plus" for="SD2">+</span><span class="minus" for="SD2">-</span>
                         </li>
                     </ul>
                 </form>
             </div>
         </li>
-
+<!--
         <li class="sails">
             <h2>Sails</h2>
             <div class="content">
@@ -58,6 +55,7 @@
             <div class="content">
             </div>      
         </li>
+-->
     </ul>
 
     <script src="/lib/jquery.js"></script>
@@ -82,14 +80,16 @@
                 });
 
             //on plus-minus click, adjust related value
-            $('.plus, .minus').click(function() {
+            $('.plus, .minus').bind('touchstart', function() {
                 var $this = $(this);
+
                 var forName = $this.attr('for');
                 var target = $this.siblings('[name='+forName+']');
-
                 var change = $this.hasClass('plus')?1:-1;
 
-                target.val( parseInt(target.val()) + change ).change();
+                target
+                    .val( parseInt(target.val()) + change )
+                    .change();
             });
 
             //on any change, save
