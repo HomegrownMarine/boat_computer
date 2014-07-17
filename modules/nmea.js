@@ -32,29 +32,6 @@ var coordinate = module.exports.coordinate = {
     }
 };
 
-// Calculate nmea checksum.  Assumes $ is not passed in
-var checksum = module.exports.checksum = function(message) {
-    var csum = 0;
-    for ( var i=0; i < message.length; i++ ) {
-        csum = csum ^ message.charCodeAt(i);
-    }
-
-
-    csum = csum.toString(16);
-    if (csum.length == 1) {
-        csum = '0'+csum;
-    }
-    return csum.toUpperCase();
-};
-
-// Validate nmea0183 message, assumes first character is $.
-var validate = module.exports.validate = function(message) {
-    if ( message.charAt(message.length-3) == '*' ) {
-        return checksum(message.substring(1,message.length-3)) == message.substring(message.length-2,message.length);
-    }
-    return true;
-};
-
 var parsers = {};
 module.exports.parsers = parsers;
 
@@ -363,6 +340,29 @@ parsers.XDR = {
             heel: parts[6]
         };
     }
+};
+
+// Calculate nmea checksum.  Assumes $ is not passed in
+var checksum = module.exports.checksum = function(message) {
+    var csum = 0;
+    for ( var i=0; i < message.length; i++ ) {
+        csum = csum ^ message.charCodeAt(i);
+    }
+
+
+    csum = csum.toString(16);
+    if (csum.length == 1) {
+        csum = '0'+csum;
+    }
+    return csum.toUpperCase();
+};
+
+// Validate nmea0183 message, assumes first character is $.
+var validate = module.exports.validate = function(message) {
+    if ( message.charAt(message.length-3) == '*' ) {
+        return checksum(message.substring(1,message.length-3)) == message.substring(message.length-2,message.length);
+    }
+    return true;
 };
 
 module.exports.messageId = function(message) {

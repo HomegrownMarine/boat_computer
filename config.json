@@ -17,16 +17,16 @@
             "driver": "./H2183CompassInput"
         },
         {
+            "name": "adafruit gps",
+            "path": "/dev/ttyO4",
+            "driver": "./mtk3339GPSInput"
+        },
+        {
             "name": "Tacktick",
             "path": "/dev/ttyO1",
             "baud": 4800,
             "rateLimit": 1000,
             "whitelist": ["IIMWV","IIVHW","IIVLW","IIVWR","IIMTW","GPRMC","HCHDG","PTAK","IIRMB"]
-        },
-        {
-            "name": "adafruit gps",
-            "path": "/dev/ttyO4",
-            "driver": "./mtk3339GPSInput"
         }
     ],
     

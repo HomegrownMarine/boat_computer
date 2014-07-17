@@ -4,13 +4,11 @@
 //! version : .1
 //! homegrownmarine.com
 
-// CURRENTLY DISABLED :: untested, provided as example
-
 function formatTacktickMessage(data) {
-    var key = data.subtype === 'heading'?'FFP':'FFD';
+    var key = data.subtype === 'heading' ? 'FFP' : 'FFD';
     key += data.index;
 
-    var parts = ["PTAK",key].concat(data.values);
+    var parts = ["PTAK", key].concat(data.values);
     return parts.join(',');
 };
 
@@ -20,9 +18,12 @@ exports.load = function(server, boatData, settings) {
         format: formatTacktickMessage
     };
 
+    //TODO: internal: don't log?
+
     //every time we get a heading message, make a custom 
     //tacktick message and send it back out.
-    boatData.on('data:hdg', function(data) {
+    //TODO: rateLimiting will throttle this.
+    boatData.on('data:xhr', function(data) {
         boatData.broadcast({
             'type': 'ptak',
             'subtype': 'data',
@@ -31,13 +32,45 @@ exports.load = function(server, boatData, settings) {
         });
     });
 
-    //every 5s rebroadcast the heading label
+    //every time we get a polar target message, 
+    //format and rebroadcast it.
+    boatData.on('data:targets', function(data) {
+        boatData.broadcast({
+            'type': 'ptak',
+            'subtype': 'data',
+            'index': 2,
+            parts: [data.targetSpeed]
+        });
+
+        boatData.broadcast({
+            'type': 'ptak',
+            'subtype': 'data',
+            'index': 3,
+            parts: [data.targetAngle]
+        });
+    });
+
+    //every 15s rebroadcast the heading label
     setInterval(function() {
         boatData.broadcast({
             'type': 'ptak',
             'subtype': 'heading',
             'index': 1,
-            parts: ['HEEL','@']
+            parts: ['HEEL', '###@']
         });
-    }, 5000);
+
+        boatData.broadcast({
+            'type': 'ptak',
+            'subtype': 'heading',
+            'index': 2,
+            parts: ['TGTSPD', 'kts']
+        });
+
+        boatData.broadcast({
+            'type': 'ptak',
+            'subtype': 'heading',
+            'index': 3,
+            parts: ['TGTTWA', '###@']
+        });
+    }, 15000);
 };

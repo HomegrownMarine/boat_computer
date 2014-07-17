@@ -20,23 +20,23 @@
                         </li>
                         <li>
                             <span class="plus" for="PV">+</span><span class="minus" for="PV">-</span>
-                            <input type="number" name="PV">
+                            <input type="number" name="PV" data-step=".5">
                             <span class="label">V</span>
-                            <input type="number" name="SV">
+                            <input type="number" name="SV" data-step=".5">
                             <span class="plus" for="SV">+</span><span class="minus" for="SV">-</span>
                         </li>
                         <li>
                             <span class="plus" for="PD1">+</span><span class="minus" for="PD1">-</span>
-                            <input type="number" name="PD1">
+                            <input type="number" name="PD1" data-step=".5">
                             <span class="label">D1</span>
-                            <input type="number" name="SD1">
+                            <input type="number" name="SD1" data-step=".5">
                             <span class="plus" for="SD1">+</span><span class="minus" for="SD1">-</span>
                         </li>
                         <li>
                             <span class="plus" for="PD2">+</span><span class="minus" for="PD2">-</span>
-                            <input type="number" name="PD2">
+                            <input type="number" name="PD2" data-step=".5">
                             <span class="label">D2</span> 
-                            <input type="number" name="SD2">
+                            <input type="number" name="SD2" data-step=".5">
                             <span class="plus" for="SD2">+</span><span class="minus" for="SD2">-</span>
                         </li>
                     </ul>
@@ -80,15 +80,17 @@
                 });
 
             //on plus-minus click, adjust related value
-            $('.plus, .minus').bind('touchstart', function() {
+            $('.plus, .minus').bind('touchstart click', function(e) {
+                e.preventDefault();
+
                 var $this = $(this);
 
                 var forName = $this.attr('for');
                 var target = $this.siblings('[name='+forName+']');
-                var change = $this.hasClass('plus')?1:-1;
+                var change = ($this.hasClass('plus')?1:-1) * (parseFloat(target.data('step'))||1);
 
                 target
-                    .val( parseInt(target.val()) + change )
+                    .val( parseFloat(target.val()) + change )
                     .change();
             });
 
