@@ -313,7 +313,7 @@ parsers.ROT = {
         return {
             msg: message,
             type: 'rot',
-            rot: parts[1]
+            rot: +parts[1]
         };
     }
 };
@@ -336,8 +336,8 @@ parsers.XDR = {
         return {
             msg: message,
             type: 'xdr',
-            pitch: parts[2],
-            heel: parts[6]
+            pitch: +parts[2],
+            heel: +parts[6]
         };
     }
 };
