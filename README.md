@@ -1,49 +1,61 @@
 #HomeGrown Marine: Boat Computer
 
-The HomeGrown Marine Boat Computer is a platform for processing and interacting with boat sensor data, such as GPS speed, position, heading, and wind.  It runs on a PC on the boat, like a Raspberry Pi or Beaglebone Black.
+The HomeGrown Marine Boat Computer is a platform for processing and interacting with boat sensor data, such as GPS speed, position, heading, and wind.  It runs on a PC on the boat, like a Raspberry Pi or Beaglebone Black, so you can build a WiFi streaming boat computer for under $100.  Its designed with a modular architecture that will let you pick and choose the functions you need, or easily develop your own modules.
 
 It is designed using [Node.js](http://nodejs.org), which allows for a really flexible and light weight webserver.  And, Node's event based architecture also works really well with the nature of sensor data.  Modules that process and consume event data can cleanly subscribe to relavent events, such as new wind or gps messages.
-
-The Boat Computer has a modular architecture that makes it easy to add new processing modules or applications.  __Apps__ can do things like:
-
-- calculate and rebroadcast target speed angles from current wind speed 
-- give mobile interface for setting waypoints
-- show advanced instrument display on phone or tablet
 
 
 ###Included Apps:###
 
-- *docs*: host racing related docs, so you have access to them on the water
+- *docs*: store racing related docs in the boat computer, so you have access to them on the water
 
 - *logs*: log NMEA 0183 sensor data to disk, so that it can be analysed later
 
-- *udp_broadcast* : broadcasts nmea stream over UDP so that it can be used with iPhone and android apps
+- *events*: log rig tune changes, so that you can compare the effects of different settings
 
-- *polars* __(coming soon)__: will calculate target heel, wind angles and speed given current wind speed
+- *udp_broadcast* : broadcasts nmea stream over UDP so that it can be used with iPhone and android apps like 
 
-- *complex_data* __(coming soon)__: calculate set/drift, twd, etc
+- *polars*: will calculate target heel, wind angles and speed given current wind speed
+
+- *tacktick*: converts heel and target data from polars app into special messages so that they can be displayed on your tacktick screens.
 
 
-###other app projects:###
+###Other App Projects:###
 
 - [Homegrown Marine/goto/](https://github.com/HomegrownMarine/goto): gives a web frontend for setting waypoints
 
 - [Homegrown Marine/web_instruments/](https://github.com/HomegrownMarine/web_instrument): turns a phone or tablet into another instrument display
 
+- [Homegrown Marine/attitude/](https://github.com/HomegrownMarine/attitude): Add a cheap heel/pitch sensor to you network ($15 plus a case)
 
-## Install
+## Build One ##
 
-1. Install node.js and forever on boat PC
- - [PC](http://nodejs.org)
+This can be done easily, with a little soldering and assembly.
+
+Materials:
+    - $35 [Raspberry Pi](http://en.wikipedia.org/wiki/Raspberry_Pi) or $45 [BeagleBone Black](http://en.wikipedia.org/wiki/BeagleBone_Black#BeagleBone_Black)
+    - $20 [Pocket Router](http://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=pocket+router) - _Be sure to get one that supports pluging a PC into the ethernet port_
+    - $20 [WaterProof Case](http://www.amazon.com/dp/B001CNNEXE/ref=sr_1_4?ie=UTF8&qid=1405872347&sr=8-4&keywords=waterproof+case+pelican)
+    - $6 [Cable Glands](http://www.ebay.com/itm/271323163450)
+    - ~$5 Electronics - [Serial Data Converter](http://www.mouser.com/ProductDetail/Exar/SP3232EEP-L/), some capacitors and a circuit board
+    - $10 [Power Converter](http://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Daps&field-keywords=car+usb+charger) - We'll use a car 12V to USB converter.  this will power the mini-PC and WiFi router.
+    - Small ethernet cable, and mini usb cables for power.
+
+The serial data converter will convert from the 12V RS-232 style data sent by your instruments to 3V TTL as expected by the miniPC.
+
+TODO: diagrams and pictures. 
+
+Install node.js and forever on boat PC
  - [Raspberry Pi](http://revryl.com/2014/01/04/nodejs-raspberry-pi/)
- - BeagleBone Black
+ - BeagleBone Black - comes pre-installed on BeagleBone Black
+ 
 2. Copy boat_computer project and any desired apps to boat PC
-3. install node serial port 
+3. install [node serial port](https://github.com/voodootikigod/node-serialport#raspberry-pi-linux)
 4. run '''npm install''' from the project directory
 5. install startup scripts __make sure apache is disabled if you want to use port 80__ 
 
 
-## Make An App
+## Make An App ##
 
 Apps are the way of extending your boat computer.  They can be light-weight, just responding to data changes, or they can include a web based user interface component.  The boat computer will import, and try and call a ```load``` method on every file or directory in the ```apps/``` directory.  The ```load``` method will receive three arguments:  ```server```, ```boat_data```, and ```settings```.
 
