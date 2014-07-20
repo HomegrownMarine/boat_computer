@@ -56,7 +56,7 @@ function mkt3339GPSInput(options) {
         //set up message rates
         var messages = ['PMTK220,200',  // set position fix to 5Hz
                         'PMTK301,2',    // set DGPS to WAAS
-                        'PMTK314,0,1,0,5,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0']; // set update rates - multiples of position fix rate above
+                        'PMTK314,0,1,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0']; // set update rates - multiples of position fix rate above
 
         _.each(messages, function(message) {
             _this.serialPort.write( nmea.format(message) + '\r\n' );
@@ -78,6 +78,12 @@ util.inherits(mkt3339GPSInput, SerialInput);
 mkt3339GPSInput.prototype.onNewLine = function(message) {
     message = message.trim();
     
+    // The mkt3339 sometimes overruns it's buffer and sends
+    // overlapped messages.
+    var lastDollarIndex = message.lastIndexOf('$');
+    if ( lastDollarIndex > 0 )
+        message = message.substring(lastDollarIndex);
+
     var messageId = nmea.messageId(message);
     if ( 'whitelist' in this._options ) {
         if ( !_.contains(this._options.whitelist, messageId) ) {
@@ -96,6 +102,7 @@ mkt3339GPSInput.prototype.onNewLine = function(message) {
 mkt3339GPSInput.cleanUpRMC = function(message) {
     // $GPRMC,214930.000,A,4741.1764,N,12224.1899,W,0.02,0.00,010614,,,D*78
     // $GPRMC,152337,V,4741.0220,N,12224.3803,W,,,210412,018.2,E*74
+    
     var parts = message.split(',');
 
     parts[0] = "GPRMC";                     //remove the $
