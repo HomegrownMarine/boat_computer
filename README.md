@@ -13,7 +13,7 @@ It is designed using [Node.js](http://nodejs.org), which allows for a really fle
 
 - *events*: log rig tune changes, so that you can compare the effects of different settings
 
-- *udp_broadcast* : broadcasts nmea stream over UDP so that it can be used with iPhone and android apps like 
+- *udp_broadcast* : broadcasts nmea stream over UDP so that it can be used with iPhone and android apps like [iRegatta](http://www.zifigo.com/?q=node/279) or [NMEARemote](http://www.zapfware.de/en/products/nmearemote/)
 
 - *polars*: will calculate target heel, wind angles and speed given current wind speed
 
@@ -48,7 +48,7 @@ TODO: diagrams and pictures.
 Install node.js and forever on boat PC
  - [Raspberry Pi](http://revryl.com/2014/01/04/nodejs-raspberry-pi/)
  - BeagleBone Black - comes pre-installed on BeagleBone Black
- 
+
 2. Copy boat_computer project and any desired apps to boat PC
 3. install [node serial port](https://github.com/voodootikigod/node-serialport#raspberry-pi-linux)
 4. run '''npm install''' from the project directory
