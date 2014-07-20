@@ -28,7 +28,7 @@ exports.load = function(server, boatData, settings) {
             'type': 'ptak',
             'subtype': 'data',
             'index': 1,
-            parts: [Math.abs(data.heel)]
+            values: [Math.abs(data.heel)]
         });
     });
 
@@ -39,14 +39,14 @@ exports.load = function(server, boatData, settings) {
             'type': 'ptak',
             'subtype': 'data',
             'index': 2,
-            parts: [data.targetSpeed]
+            values: [data.targetSpeed]
         });
 
         boatData.broadcast({
             'type': 'ptak',
             'subtype': 'data',
             'index': 3,
-            parts: [data.targetAngle]
+            values: [data.targetAngle]
         });
     });
 
@@ -56,21 +56,21 @@ exports.load = function(server, boatData, settings) {
             'type': 'ptak',
             'subtype': 'heading',
             'index': 1,
-            parts: ['HEEL', '###@']
+            values: ['HEEL', '###@']
         });
 
         boatData.broadcast({
             'type': 'ptak',
             'subtype': 'heading',
             'index': 2,
-            parts: ['TGTSPD', 'kts']
+            values: ['TGTSPD', 'kts']
         });
 
         boatData.broadcast({
             'type': 'ptak',
             'subtype': 'heading',
             'index': 3,
-            parts: ['TGTTWA', '###@']
+            values: ['TGTTWA', '###@']
         });
     }, 15000);
 };
