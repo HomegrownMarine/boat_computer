@@ -18,7 +18,7 @@ function attachBroadcastSocket(boat_data) {
     
     var onMessage = function(message) {
         try {
-            var buffer = new Buffer(message);
+            var buffer = new Buffer(message+'\r\n');
             socket.send(buffer, 0, buffer.length, broadcastPort, broadcastAddress);
         }
         catch(e) {
