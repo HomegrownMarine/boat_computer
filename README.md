@@ -1,6 +1,8 @@
 #HomeGrown Marine: Boat Computer
 
-The HomeGrown Marine Boat Computer is a platform for processing and interacting with boat sensor data, such as GPS speed, position, heading, and wind.  It runs on a PC on the boat, like a Raspberry Pi or Beaglebone Black, so you can build a WiFi streaming boat computer for under $100.  Its designed with a modular architecture that will let you pick and choose the functions you need, or easily develop your own modules.
+The HomeGrown Marine Boat Computer is a platform for processing and interacting with boat sensor data, such as GPS speed, position, heading, and wind.  It runs on a small PC on the boat, like a Raspberry Pi or Beaglebone Black, so you can build a WiFi streaming boat computer for under $100.  Its designed with a modular architecture that will let you pick and choose the functions you need, or easily develop your own modules.  With this, you can build a regatta processor to compete with very expensive offerings from the big guys.
+
+![](https://raw.githubusercontent.com/HomegrownMarine/boat_computer/master/README/pi_to_bandg.png)
 
 It is designed using [Node.js](http://nodejs.org), which allows for a really flexible and light weight webserver.  And, Node's event based architecture also works really well with the nature of sensor data.  Modules that process and consume event data can cleanly subscribe to relavent events, such as new wind or gps messages.
 
@@ -19,6 +21,9 @@ It is designed using [Node.js](http://nodejs.org), which allows for a really fle
 
 - *tacktick*: converts heel and target data from polars app into special messages so that they can be displayed on your tacktick screens.
 
+![](https://raw.githubusercontent.com/HomegrownMarine/boat_computer/master/README/index.png)
+![](https://raw.githubusercontent.com/HomegrownMarine/boat_computer/master/README/documents.png)
+![](https://raw.githubusercontent.com/HomegrownMarine/boat_computer/master/README/logs.png)
 
 ###Other App Projects:###
 
@@ -49,11 +54,11 @@ Install node.js and forever on boat PC
  - [Raspberry Pi](http://revryl.com/2014/01/04/nodejs-raspberry-pi/)
  - BeagleBone Black - comes pre-installed on BeagleBone Black
 
+
 2. Copy boat_computer project and any desired apps to boat PC
 3. install [node serial port](https://github.com/voodootikigod/node-serialport#raspberry-pi-linux)
 4. run '''npm install''' from the project directory
 5. install startup scripts __make sure apache is disabled if you want to use port 80__ 
-
 
 ## Make An App ##
 

@@ -1,13 +1,10 @@
 
+
 1) You need a hundred megs of free space on your primary drive.  Uninstall gnome desktop, etc to make some room
 2) disable bonescript and cloud9, we want those ports
 3) create directories
 3) install node projects
 
-
-beaglebone - cache and tmp need to be on sd card
-
-npm install --no-bin-links
 
 
 https://wiki.archlinux.org/index.php/systemd
