@@ -35,6 +35,8 @@ It is designed using [Node.js](http://nodejs.org), which allows for a really fle
 
 ## Build One ##
 
+![](https://raw.githubusercontent.com/HomegrownMarine/boat_computer/master/README/black_box.png)
+
 This can be done easily, with a little soldering and assembly.
 
 Materials:
