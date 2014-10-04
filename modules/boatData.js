@@ -15,7 +15,7 @@ var fs = require('fs');
 
 var winston = require('winston');
 
-var SerialInput = require('./serialInput');
+var SerialInput = require('../data_sources/serialInput');
 var EventEmitter = require('events').EventEmitter;
 
 var _ = require('lodash');
@@ -31,7 +31,7 @@ function BoatData(sources) {
 
     this._sources = _.map(sources, function(config) {
         if ( 'driver' in config ) {
-            var driver = require(config.driver)
+            var driver = require('../data_sources/'+config.driver)
             return new driver(config);
         }
         //default to serial driver

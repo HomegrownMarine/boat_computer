@@ -3,7 +3,7 @@
 
     "settingsFile": "/race/data/settings.json",
     
-    "disabledApps": ["tacktick", "goto", "calcs", "polars"],
+    "disabledApps": ["tacktick", "goto", "calcs"],
 
     "winston:logLevel": "info",
     "winston:logDir": "/race/data/logs/",
@@ -14,12 +14,7 @@
         {
             "name": "Compass",
             "path": "/dev/ttyO2",
-            "driver": "./H2183CompassInput"
-        },
-        {
-            "name": "adafruit gps",
-            "path": "/dev/ttyO4",
-            "driver": "./mtk3339GPSInput"
+            "driver": "H2183CompassInput"
         },
         {
             "name": "Tacktick",
@@ -27,6 +22,12 @@
             "baud": 4800,
             "rateLimit": 1000,
             "whitelist": ["IIMWV","IIVHW","IIVLW","IIVWR","IIMTW","GPRMC","HCHDG","PTAK","IIRMB"]
+        },
+        {
+            "name": "GPS",
+            "path": "/dev/ttyO4",
+            "baud": 38400,
+            "write": false
         }
     ],
     
@@ -36,6 +37,11 @@
             "path": "/dev/ttyO4",
             "baud": 9600,
             "write": false
+        },
+        {
+            "name": "adafruit gps",
+            "path": "/dev/ttyO4",
+            "driver": "mtk3339GPSInput"
         }
     ],
 
@@ -47,7 +53,7 @@
          "port": 3000,
          "dataSources": [{
             "name": "replay",
-            "driver": "./replayInput",
+            "driver": "replayInput",
             "file": "/race/data/raw/14030812.txt"
         }],
         "disabledApps": [],

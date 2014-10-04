@@ -9,6 +9,8 @@ var util = require('util');
 var fs = require('fs');
 var readline = require('readline');
 
+var winston = require('winston');
+
 var _ = require('lodash');
 
 var EventEmitter = require('events').EventEmitter;
@@ -22,6 +24,8 @@ function ReplayInput(options) {
     this._options = options;
     this._now = {};
     this._queue = [];
+
+    winston.info('Loading replay data source');
 }
 util.inherits(ReplayInput, EventEmitter);
 
