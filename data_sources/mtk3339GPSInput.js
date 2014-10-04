@@ -6,7 +6,7 @@
 //! homegrownmarine.com
 
 var util = require('util');
-var nmea = require('./nmea');
+var nmea = require('../modules/nmea');
 
 var _ = require('lodash');
 var winston = require('winston');

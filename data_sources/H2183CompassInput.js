@@ -5,7 +5,7 @@
 //! homegrownmarine.com
 
 var util = require('util');
-var nmea = require('./nmea');
+var nmea = require('../modules/nmea');
 var winston = require('winston');
 
 var SerialInput = require('./serialInput');
