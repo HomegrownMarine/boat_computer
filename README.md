@@ -35,7 +35,7 @@ It is designed using [Node.js](http://nodejs.org), which allows for a really fle
 
 ## Build One ##
 
-![](https://raw.githubusercontent.com/HomegrownMarine/boat_computer/master/README/black_box.png)
+![](https://raw.githubusercontent.com/HomegrownMarine/boat_computer/master/README/black_box.jpg)
 
 This can be done easily, with a little soldering and assembly.
 
@@ -52,15 +52,18 @@ The serial data converter will convert from the 12V RS-232 style data sent by yo
 
 TODO: diagrams and pictures. 
 
-Install node.js and forever on boat PC
+1. Install node.js and forever on boat PC
  - [Raspberry Pi](http://revryl.com/2014/01/04/nodejs-raspberry-pi/)
  - BeagleBone Black - comes pre-installed on BeagleBone Black
-
 
 2. Copy boat_computer project and any desired apps to boat PC
 3. install [node serial port](https://github.com/voodootikigod/node-serialport#raspberry-pi-linux)
 4. run '''npm install''' from the project directory
 5. install startup scripts __make sure apache is disabled if you want to use port 80__ 
+
+####If you're have trouble setting this up and getting it running, please open an issue to ask for help [here](https://github.com/HomegrownMarine/boat_computer/issues/new).
+
+If you just want to record your boat data, check out this simple [NMEA Logger](https://github.com/HomegrownMarine/simple_logger).  It will just log boat data to an SD card.
 
 ## Make An App ##
 
@@ -85,3 +88,9 @@ boat_data is the interface to the boat's NMEA 0183 instrument system.  It can ei
 - 'data:_type_' - receive only specific types of data.  For example, receive only GPS data by subscribing to 'data:rmc'
 
 sending data to other apps and the instrument system is done by calling ```boat_data.broadcast(message,data)```.  If only message is specified, it will be sent only to the serial bus.  If data is specified, as a json object, it will be broadcast to the rest of the apps on your system.  If an encoder is specified for the data type, it will also be encoded into a NMEA sentence and broadcast over the serial bus.
+
+## Next Steps
+
+- better installation scripts and instructions
+- support for NMEA 2000 and [signal k](https://signalk.github.io)
+- more apps
