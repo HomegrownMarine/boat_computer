@@ -40,13 +40,13 @@ It is designed using [Node.js](http://nodejs.org), which allows for a really fle
 This can be done easily, with a little soldering and assembly.
 
 Materials:
-    - $35 [Raspberry Pi](http://en.wikipedia.org/wiki/Raspberry_Pi) or $45 [BeagleBone Black](http://en.wikipedia.org/wiki/BeagleBone_Black#BeagleBone_Black)
-    - $20 [Pocket Router](http://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=pocket+router) - _Be sure to get one that supports pluging a PC into the ethernet port_
-    - $20 [WaterProof Case](http://www.amazon.com/dp/B001CNNEXE/ref=sr_1_4?ie=UTF8&qid=1405872347&sr=8-4&keywords=waterproof+case+pelican)
-    - $6 [Cable Glands](http://www.ebay.com/itm/271323163450)
-    - ~$5 Electronics - [Serial Data Converter](http://www.mouser.com/ProductDetail/Exar/SP3232EEP-L/), some capacitors and a circuit board
-    - $10 [Power Converter](http://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Daps&field-keywords=car+usb+charger) - We'll use a car 12V to USB converter.  this will power the mini-PC and WiFi router.
-    - Small ethernet cable, and mini usb cables for power.
+- $35 [Raspberry Pi](http://en.wikipedia.org/wiki/Raspberry_Pi) or $45 [BeagleBone Black](http://en.wikipedia.org/wiki/BeagleBone_Black#BeagleBone_Black)
+- $20 [Pocket Router](http://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=pocket+router) - _Be sure to get one that supports pluging a PC into the ethernet port_
+- $20 [WaterProof Case](http://www.amazon.com/dp/B001CNNEXE/ref=sr_1_4?ie=UTF8&qid=1405872347&sr=8-4&keywords=waterproof+case+pelican)
+- $6 [Cable Glands](http://www.ebay.com/itm/271323163450)
+- ~$5 Electronics - [Serial Data Converter](http://www.mouser.com/ProductDetail/Exar/SP3232EEP-L/), some capacitors and a circuit board
+- $10 [Power Converter](http://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Daps&field-keywords=car+usb+charger) - We'll use a car 12V to USB converter.  this will power the mini-PC and WiFi router.
+- Small ethernet cable, and mini usb cables for power.
 
 The serial data converter will convert from the 12V RS-232 style data sent by your instruments to 3V TTL as expected by the miniPC.
 
