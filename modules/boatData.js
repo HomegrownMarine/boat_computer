@@ -58,9 +58,13 @@ BoatData.prototype.emitData = function(message, data) {
     }
 
     if ( data ) {
-        this.emit('data:'+data.type, data);
+        if ( data.type )
+            this.emit('data:'+data.type, data);
+        
         this.emit('data', data);
         this._now = _.extend( this._now, _.omit(data, 'message','type') );
+    
+        // console.info(JSON.stringify(data))
     }
 };
 

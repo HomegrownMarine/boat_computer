@@ -201,6 +201,7 @@ parsers.MWV = {
             speed = 'aws';
         }
         else {
+            return null;
             angle = 'twa';
             speed = 'tws';
         }

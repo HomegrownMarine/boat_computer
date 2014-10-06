@@ -18,6 +18,7 @@ function attachBroadcastSocket(boat_data) {
     
     var onMessage = function(message) {
         try {
+            //newlines have been stripped from message.  Readd before broadcasting.
             var buffer = new Buffer(message+'\r\n');
             socket.send(buffer, 0, buffer.length, broadcastPort, broadcastAddress);
         }
