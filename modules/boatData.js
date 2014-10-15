@@ -71,7 +71,7 @@ BoatData.prototype.emitData = function(message, data) {
 //handle new message from message pump (Tail)
 BoatData.prototype.onMessage = function(message, sender) {
     message = message.trim();
-    var messageId = message.substring(1,6);
+    var messageId = nmea.messageId(message);
 
     winston.debug('BoatData: received [%s] from %s.', messageId, sender._options.name);
 

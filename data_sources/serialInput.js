@@ -4,9 +4,11 @@
 //! version : 0.1
 //! homegrownmarine.com
 
-var util = require('util')
+var util = require('util');
 var winston = require('winston');
 var _ = require('lodash');
+
+var nmea = require('../modules/nmea');
 
 var serialport = require("serialport");
 var SerialPort = serialport.SerialPort; // local object constructor
@@ -42,14 +44,14 @@ SerialInput.prototype.start = function() {
         });
 
     this.serialPort.on('data', _.bind(this.onNewLine, this));
-};
+};u
 
 //handle new message from message pump (Tail)
 SerialInput.prototype.onNewLine = function(message) {
     message = message.trim();
     
     if ( 'whitelist' in this._options ) {
-        var messageId = message.substring(1,6);
+        var messageId = nmea.messageId(message);
         if ( !_.contains(this._options.whitelist, messageId) ) {
             winston.debug('%s.onNewLine: Message [%s] not whitelisted.  Supressing.', this._options.name, messageId);
             return;
@@ -63,7 +65,7 @@ SerialInput.prototype.write = function(message) {
 
     //TODO: ratelimiting
     if ( this._serialPortReady ) {
-        var messageId = message.substring(1,6);
+        var messageId = nmea.messageId(message);
 
         if ( 'whitelist' in this._options ) {
             if ( !_.contains(this._options.whitelist, messageId) ) {

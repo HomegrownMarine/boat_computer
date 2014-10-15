@@ -70,11 +70,10 @@ ReplayInput.prototype.processQueue = function() {
 
 ReplayInput.prototype.onNewLine = function(message) {
     message = message.trim();
-    var messageId = message.substring(1,6);
-
     this.emit('message', message);
 
     //using heading message for timing
+    var messageId = nmea.messageId(message);
     if ( messageId == 'HCHDG' ) {
         return false;
     }
