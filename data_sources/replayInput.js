@@ -13,6 +13,8 @@ var winston = require('winston');
 
 var _ = require('lodash');
 
+var nmea = require('../modules/nmea');
+
 var EventEmitter = require('events').EventEmitter;
 
 function ReplayInput(options) {

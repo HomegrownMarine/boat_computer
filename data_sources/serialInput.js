@@ -44,7 +44,7 @@ SerialInput.prototype.start = function() {
         });
 
     this.serialPort.on('data', _.bind(this.onNewLine, this));
-};u
+};
 
 //handle new message from message pump (Tail)
 SerialInput.prototype.onNewLine = function(message) {
