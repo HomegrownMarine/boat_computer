@@ -24,6 +24,7 @@
   ],
   "dependencies": {
     "homegrown-polars": "0.0.3",
+    "homegrown-sailing": "0.0.6",
     "serialport": "1.3.1",
     "moment": "2.5.1",
     "express": "3.4.8",
@@ -35,7 +36,11 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "grunt": "*",
-    "chai": "*"
+    "chai": "*",
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-mocha-test": "^0.11.0"
+
   }
 }

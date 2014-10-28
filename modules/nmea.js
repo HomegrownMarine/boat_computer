@@ -86,7 +86,7 @@ parsers.RMC = {
 
         return data;
     }
-}
+};
 
 /*RMB Recommended Minimum Navigation Information
 
@@ -165,7 +165,7 @@ parsers.HDG = {
             hdg: +parts[1]  //TODO: convert to true
         };
     }
-}
+};
 
 
 /*
@@ -201,9 +201,11 @@ parsers.MWV = {
             speed = 'aws';
         }
         else {
+            // angle = 'twa';
+            // speed = 'tws';
+
+            //not accepting twa from instruments
             return null;
-            angle = 'twa';
-            speed = 'tws';
         }
 
         data[speed] = +parts[1];

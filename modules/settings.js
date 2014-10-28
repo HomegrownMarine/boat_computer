@@ -12,7 +12,7 @@ var _ = require('lodash');
 
 
 function getConfigs() {
-    var allConfigs = require('../config.json');
+    var allConfigs = require('../config');
     var env = process.env.NODE_ENV || 'development';
 
     winston.info('env', env);

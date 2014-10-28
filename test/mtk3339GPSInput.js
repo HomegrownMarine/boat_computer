@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
 var moment = require('moment');
 
-var mtk3339 = require('../modules/mtk3339GPSInput.js');
+var mtk3339 = require('../data_sources/mtk3339GPSInput.js');
 
 describe('mtk3339', function() {
 

@@ -70,7 +70,7 @@ function H2183CompassInput(options) {
                 parser: serialport.parsers.readline("\r\n")
             }, onLowSpeedConnect);
     };
-};
+}
 util.inherits(H2183CompassInput, SerialInput);
 
 H2183CompassInput.highSpeedCommands = function() {
@@ -79,6 +79,6 @@ H2183CompassInput.highSpeedCommands = function() {
         "PAMTC,EN,ROT,1,10",
         "PAMTC,EN,S"
     ];
-}
+};
 
 module.exports = H2183CompassInput;

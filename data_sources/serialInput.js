@@ -29,7 +29,7 @@ function SerialInput(options) {
     if ( this._options.rateLimit > 0 ) {
         this._lastSent = {};
     }
-};
+}
 util.inherits(SerialInput, EventEmitter);
 
 // Start message pump
@@ -76,7 +76,7 @@ SerialInput.prototype.write = function(message) {
 
         if ( this._options.rateLimit > 0 ) {
             var now = new Date().getTime();
-            if ( messageId in this._lastSent && this._lastSent[messageId] + (this._options.rateLimit * .9) > now ) {
+            if ( messageId in this._lastSent && this._lastSent[messageId] + (this._options.rateLimit * 0.9) > now ) {
                 winston.debug('%s.write: Message [%s] ratelimited.  Supressing.', this._options.name, messageId);
                 return;
             }

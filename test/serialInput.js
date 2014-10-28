@@ -13,9 +13,7 @@ describe('serialInput', function() {
 
     it(' should not write non-whitelisted messages to serial port.');
 
-    it(' should always add \r\n to the end of messages before righting to the serial port.');
+    it(' should always add \r\n to the end of messages before writing to the serial port.');
 
-    it(' should rate limit right.');
-
-    it(' should rate limit right.');
+    it(' should rate limit.');
 });

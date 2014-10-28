@@ -71,7 +71,7 @@ function mkt3339GPSInput(options) {
                 parser: serialport.parsers.readline("\r\n")
             }, onLowSpeedConnect);
     };
-};
+}
 util.inherits(mkt3339GPSInput, SerialInput);
 
 //handle new message from message pump (Tail)
@@ -113,11 +113,11 @@ mkt3339GPSInput.cleanUpRMC = function(message) {
 
     message = parts.join(',');
     return '$' + message + '*' + nmea.checksum(message);
-}
+};
 
 mkt3339GPSInput.prototype.close = function() {
     this.serialPort.close();
     this._serialPortReady = false;
-}
+};
 
 module.exports = mkt3339GPSInput;

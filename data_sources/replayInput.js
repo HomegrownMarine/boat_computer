@@ -32,7 +32,7 @@ function ReplayInput(options) {
 util.inherits(ReplayInput, EventEmitter);
 
 ReplayInput.prototype.start = function() {
-    if ( this._currentFile == null ) {
+    if ( this._currentFile === null ) {
         
         //TODO: make this configurable
         var file = this._options.file;
@@ -54,7 +54,7 @@ ReplayInput.prototype.start = function() {
     }
 
     this.processQueue();
-}
+};
 
 ReplayInput.prototype.processQueue = function() {
     if ( this._queue.length < 100 ) {
@@ -68,7 +68,7 @@ ReplayInput.prototype.processQueue = function() {
     }
 
     setTimeout(_.bind(this.processQueue, this), 100);
-}
+};
 
 ReplayInput.prototype.onNewLine = function(message) {
     message = message.trim();
@@ -80,10 +80,10 @@ ReplayInput.prototype.onNewLine = function(message) {
         return false;
     }
     return true;
-}
+};
 
 ReplayInput.prototype.write = function() {
     //noop
-}
+};
 
 module.exports = ReplayInput;

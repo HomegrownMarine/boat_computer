@@ -31,13 +31,13 @@ function BoatData(sources) {
 
     this._sources = _.map(sources, function(config) {
         if ( 'driver' in config ) {
-            var driver = require('../data_sources/'+config.driver)
+            var driver = require('../data_sources/'+config.driver);
             return new driver(config);
         }
         //default to serial driver
         return new SerialInput(config);
     });
-};
+}
 util.inherits(BoatData, EventEmitter);
 
 // Start message pump
@@ -73,9 +73,11 @@ BoatData.prototype.onMessage = function(message, sender) {
     message = message.trim();
     var messageId = nmea.messageId(message);
 
-    winston.debug('BoatData: received [%s] from %s.', messageId, sender._options.name);
-
-    winston.debug('BoatData: writing to each: %s', _.map(this._sources, function(x){return x._options.name }) )
+    if (sender) {
+        winston.debug('BoatData: received [%s] from %s.', messageId, sender._options.name);
+        winston.debug('BoatData: writing to each: %s', _.map(this._sources, function(x){ return x._options.name; }) );        
+    }
+    
     // re-broadcast (ie. MUX)
     _.each(this._sources, function(source) {
         if (sender != source) {
@@ -101,7 +103,7 @@ BoatData.prototype.now = function() {
 // Broadcast a new piece of data.  If a NMEA message is supplied,
 // or generatable, it will be broadcast on the NMEA network as well
 BoatData.prototype.broadcast = function(message, data) {
-    if ( message != null && !_.isString(message) ) {
+    if ( message !== null && !_.isString(message) ) {
         data = message;
         message = null;
     }

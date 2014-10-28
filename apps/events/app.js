@@ -23,7 +23,7 @@ var initialSettings = {
 };
 
 var eventMessage = function(key, data) {
-    return 'PEVNT,' + key + ',' + _.map(data, function(value, key) { return key+'='+value }).join(',');
+    return 'PEVNT,' + key + ',' + _.map(data, function(value, key) { return key+'='+value; }).join(',');
 };
 
 exports.load = function(server, boatData, settings) {

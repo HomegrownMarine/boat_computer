@@ -20,7 +20,7 @@ describe('boatData', function() {
             done();
         });
 
-        boat_data.onNewLine(message);
+        boat_data.onMessage(message);
     });
 
     it(' emit data events for new messages.', function(done){
@@ -31,7 +31,7 @@ describe('boatData', function() {
             done();
         });
 
-        boat_data.onNewLine(message);
+        boat_data.onMessage(message);
     });
 
     it(' emit data:type events for new messages.', function(done){
@@ -42,7 +42,7 @@ describe('boatData', function() {
             done();
         });
 
-        boat_data.onNewLine(message);
+        boat_data.onMessage(message);
     });
 
     it(' emit nmea events for broadcast messages.', function(done){
