@@ -208,9 +208,13 @@ parsers.MWV = {
             return null;
         }
 
-        data[speed] = +parts[1];
-        data[angle] = +parts[3];     //assumes K, TODO: unit conversion
+        data[angle] = +parts[1];     //assumes K, TODO: unit conversion
+        data[speed] = +parts[3];
 
+        if (data[angle] > 180) {
+            data[angle] = -1 * (360 - data[angle]);
+        }
+        
         return data;
     },
     format: function() {

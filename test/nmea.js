@@ -1,5 +1,6 @@
 var assert = require('chai').assert;
 var moment = require('moment');
+var _ = require('lodash');
 
 var nmea = require('../modules/nmea.js');
 
@@ -95,25 +96,65 @@ describe('parsers', function() {
     })
     
     describe('RMC', function() {
-        it(' should parse');
-            // var data = nmea.parse('$GPRMC,030000.6,A,4740.36415,N,12225.35953,W,000.02,059.5,160612,016.6,E*4A');
-            // var expected = {
-            //     msg: 'GPRMC,030000.6,A,4740.36415,N,12225.35953,W,000.02,059.5,160612,016.6,E',
-            //     type: 'rmc',
-            //     lat: 47,
-            //     latStr: '4740.36415,N',
-            //     lon: -122,
-            //     lonStr: '12225.35953,W',
-            //     time: moment.utc('160612 030000', "DDMMYY HHmmssS"),
-            //     variation: -16.6
-            // };
-        // });
-        // assert.deepEqual(data, expected)
+        it('should parse', function() {
+            var expected = {
+                lat: 47.672735,
+                latStr: '4740.36415,N',
+                lon: -122.422658,
+                lonStr: '12225.35953,W',
+                time: moment.utc('160612 030000', "DDMMYY HHmmssS"),
+                variation: -16.6
+            };
+            
+            var data = nmea.parse('$GPRMC,030000,A,4740.36415,N,12225.35953,W,000.02,059.5,160612,016.6,E*52');
+
+            assert.equal(data.variation, expected.variation)
+            assert.equal(data.latStr, expected.latStr)
+            assert.equal(data.lonStr, expected.lonStr)
+            assert.closeTo(data.lat, expected.lat, .00001)
+            assert.closeTo(data.lon, expected.lon, .00001)
+            assert.equal( expected.time.diff( data.time ), 0 )
+        });
+
+        it('should parse with decimal time')
+        it('should parse without variation')
+        it('should parse without cog and sog')
     });
 
     describe('HDG', function() {
         it('should parse');
         it('should format');
     });
+
+    describe('MWV', function() {
+        it('should parse relative wind speed.', function() {
+            var data = nmea.parse('$IIMWV,153,R,07.4,N,A*17');
+            data = _.pick(data, ['awa', 'aws', 'type']);
+            var expected = {
+                awa: 153,
+                aws: 7.4,
+                type: 'mwv'
+            };
+
+            assert.deepEqual(data, expected);
+        });
+        it('should parse relative wind speed greater than 180 deg.', function() {
+            var data = nmea.parse('$WIMWV,200.0,R,11.0,N,A*11');
+            data = _.pick(data, ['awa', 'aws', 'type']);
+            var expected = {
+                awa: -160,
+                aws: 11,
+                type: 'mwv'
+            };
+
+            assert.deepEqual(data, expected);
+        });
+        it('should not parse true wind speed.', function() {
+            var data = nmea.parse('$IIMWV,153,T,07.4,N,A*17');
+            var expected = null;
+
+            assert.deepEqual(data, expected);
+        });
+    })
 });
 
