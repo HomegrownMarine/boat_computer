@@ -29,7 +29,10 @@ function BoatData(sources) {
     this._now = {};
     this.nmea = nmea;
 
+    winston.info('Initializing Boat Data');
+
     this._sources = _.map(sources, function(config) {
+        winston.info('Initializing Boat Data Driver '+config.name);
         if ( 'driver' in config ) {
             var driver = require('../data_sources/'+config.driver);
             return new driver(config);
@@ -44,6 +47,8 @@ util.inherits(BoatData, EventEmitter);
 BoatData.prototype.start = function() {
     var _this = this;
     _.each( this._sources, function(source) {
+        winston.info('Starting Source '+source.name);
+
         source.start();
         source.on('message', function(message) {
             _this.onMessage.call(_this, message, source);

@@ -19,6 +19,8 @@ var BoatData = require('./modules/boatData').BoatData;
 var settings = require('./modules/settings');
 
 function loadApps(server, boatData, settings) {
+    winston.info('Loading Apps');
+
     var disabledApps = settings.get('disabledApps') || [];
 
     var links = [];
@@ -45,9 +47,9 @@ function loadApps(server, boatData, settings) {
         }
     });
 
-    links = _.sortBy(links, function(l) { return l.priority});
+    links = _.sortBy(links, function(l) { return l.priority; });
     return links;
-};
+}
 
 function initializeWinston(winston, settings) {
     winston.remove(winston.transports.Console);
@@ -99,6 +101,7 @@ server.get('/now', function(req, res) {
 });
 
 
+//TODO: ES library
 var streamConnections = [];
 //on data, send to client
 boatData.on('data', function streamOnData(data) {
@@ -128,6 +131,8 @@ server.get('/stream', function(req, res) {
         streamConnections = _.without(streamConnections, res);
     });
 });
+
+
 
 //load installed apps
 var apps = loadApps(server, boatData, settings);
