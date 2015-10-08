@@ -30,10 +30,6 @@ function H2183CompassInput(options) {
     var onLowSpeedConnect = function() {
         winston.info('H2183Compass: onLowSpeedConnect');
 
-        // first, set baud to 115200
-        var message = 'PMTK251,115200';
-        _this.serialPort.write( nmea.format(message) + '\r\n' );
-
         // first, set baud to 38400
         var messages = ["PAMTX,0",              // disable, for setting baud
                         "PAMTC,BAUD,38400"      // set baud
@@ -44,13 +40,25 @@ function H2183CompassInput(options) {
             // reconnect after 500ms
             _this.serialPort.close();
 
-            _this.serialPort = new SerialPort(_this._options.path, {
-                baudrate: 38400,
-                parser: serialport.parsers.readline("\r\n")
-            }, onHighSpeedConnect);
+            try {
+                _this.serialPort = new SerialPort(_this._options.path, {
+                        baudrate: 38400,
+                        parser: serialport.parsers.readline("\r\n")
+                    }, false);
 
-            _this.serialPort.on('data', _.bind(_this.onNewLine, _this));
-        }, 500);
+                _this.serialPort.on('error', function(error) {
+                    winston.error("H2183Compass: high speed - error event fired", error);
+                });
+
+                _this.serialPort.open( function(error) {
+                    winston.error("H2183Compass: high speed - error on open", error);
+                    _this.onHighSpeedConnect();
+                });
+
+            } catch (error) {
+                winston.error("H2183Compass: high speed - exception on open", error);
+            }
+        }, 1000);
     };
 
     var onHighSpeedConnect = function() {
@@ -61,14 +69,29 @@ function H2183CompassInput(options) {
 
         _.each(messages, function(message) { _this.serialPort.write( nmea.format(message) + '\r\n' ); });
 
+        _this.serialPort.on('data', _.bind(_this.onNewLine, _this));
         _this._serialPortReady = true;
     };
 
     this.start = function() {
-        _this.serialPort = new SerialPort(_this._options.path, {
-                baudrate: 4800,
-                parser: serialport.parsers.readline("\r\n")
-            }, onLowSpeedConnect);
+        try {
+            _this.serialPort = new SerialPort(_this._options.path, {
+                    baudrate: 4800,
+                    parser: serialport.parsers.readline("\r\n")
+                }, false);
+
+            _this.serialPort.on('error', function(error) {
+                winston.error("H2183Compass: low speed - error event fired", error);
+            });
+
+            _this.serialPort.open( function(error) {
+                winston.error("H2183Compass: low speed - error on open", error);
+                _this.onLowSpeedConnect();
+            });
+
+        } catch (error) {
+            winston.error("H2183Compass: low speed - exception on open", error);
+        }
     };
 }
 util.inherits(H2183CompassInput, SerialInput);
