@@ -51,8 +51,8 @@ function H2183CompassInput(options) {
                 });
 
                 _this.serialPort.open( function(error) {
-                    winston.error("H2183Compass: high speed - error on open", error);
-                    _this.onHighSpeedConnect();
+                    if (error) winston.error("H2183Compass: high speed - error on open", error);
+                    onHighSpeedConnect();
                 });
 
             } catch (error) {
@@ -85,8 +85,8 @@ function H2183CompassInput(options) {
             });
 
             _this.serialPort.open( function(error) {
-                winston.error("H2183Compass: low speed - error on open", error);
-                _this.onLowSpeedConnect();
+                if (error) winston.error("H2183Compass: low speed - error on open", error);
+                onLowSpeedConnect();
             });
 
         } catch (error) {
