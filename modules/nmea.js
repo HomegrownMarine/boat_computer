@@ -32,6 +32,8 @@ var coordinate = module.exports.coordinate = {
     }
 };
 
+module.exports.variation = 0;
+
 var parsers = {};
 module.exports.parsers = parsers;
 
@@ -78,6 +80,9 @@ parsers.RMC = {
             time: moment.utc(parts[9]+' '+parts[1], "DDMMYY HHmmssS"),
             variation: +parts[10] * (parts[11] == 'E'?-1:1)
         };
+
+        //TODO: this is a side effect. apparently, those are bad
+        module.exports.variation = _.isNumber(data.variation)? data.variation:0;
 
         if (parts[7])
             data.sog = +parts[7];
@@ -162,7 +167,7 @@ parsers.HDG = {
         return {
             msg: message,
             type: 'hdg',
-            hdg: +parts[1]  //TODO: convert to true
+            hdg: +parts[1] - module.exports.variation
         };
     }
 };
