@@ -31,6 +31,10 @@ function ReplayInput(options) {
 }
 util.inherits(ReplayInput, EventEmitter);
 
+ReplayInput.prototype.name = function() {
+    return "ReplayInput";
+};
+
 ReplayInput.prototype.start = function() {
     if ( this._currentFile === null ) {
         
@@ -67,7 +71,7 @@ ReplayInput.prototype.processQueue = function() {
         loop = this.onNewLine(message);
     }
 
-    setTimeout(_.bind(this.processQueue, this), 100);
+    setTimeout(_.bind(this.processQueue, this), 30);
 };
 
 ReplayInput.prototype.onNewLine = function(message) {

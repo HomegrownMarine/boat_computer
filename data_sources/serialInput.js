@@ -32,6 +32,10 @@ function SerialInput(options) {
 }
 util.inherits(SerialInput, EventEmitter);
 
+SerialInput.prototype.name = function() {
+    return this._options.name;
+};
+
 // Start message pump
 SerialInput.prototype.start = function() {
     var _this = this;
@@ -63,7 +67,6 @@ SerialInput.prototype.onNewLine = function(message) {
 
 SerialInput.prototype.write = function(message) {
 
-    //TODO: ratelimiting
     if ( this._serialPortReady ) {
         var messageId = nmea.messageId(message);
 

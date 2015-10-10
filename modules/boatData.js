@@ -47,7 +47,7 @@ util.inherits(BoatData, EventEmitter);
 BoatData.prototype.start = function() {
     var _this = this;
     _.each( this._sources, function(source) {
-        winston.info('Starting Source '+source.name);
+        winston.info('Starting Source '+source.name());
 
         source.start();
         source.on('message', function(message) {
