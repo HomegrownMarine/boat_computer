@@ -9,6 +9,9 @@
 
 https://wiki.archlinux.org/index.php/systemd
 systemctl disable bonescript-autorun.service
+bonescript.socket
+cloud9.socket
+
 
 http://beaglebone.cameon.net/home/serial-ports-uart
 drm.debug=7 capemgr.enable_partno=BB-UART1,BB-UART2,BB-UART4,BB-UART5
