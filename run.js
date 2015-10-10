@@ -161,11 +161,11 @@ if ( settings.get('syncSystemTime') ) {
             var now = data['time'];
             exec('date +%s -s "@' + now.unix() + '"' );
 
-            fs.exists('/etc/timestamp', function (exists) {
-                if (exists) {
-                    exec('echo "' + now.format("YYYYMMDDmmhhss") +'" >>/etc/timestamp' );
-                }
-            });
+            // fs.exists('/etc/timestamp', function (exists) {
+            //     if (exists) {
+            //         exec('echo "' + now.format("YYYYMMDDmmhhss") +'" >>/etc/timestamp' );
+            //     }
+            // });
             
         });
     };
