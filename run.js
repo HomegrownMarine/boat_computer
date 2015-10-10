@@ -77,6 +77,8 @@ function initializeWinston(winston, settings) {
 
 initializeWinston(winston, settings);
 
+winston.info("starting boat_computer: PID "+process.pid);
+
 //set up modules
 
 // boat data module
@@ -158,6 +160,13 @@ if ( settings.get('syncSystemTime') ) {
         boatData.once('data:rmc', function(data) {
             var now = data['time'];
             exec('date +%s -s "@' + now.unix() + '"' );
+
+            fs.exists('/etc/timestamp', function (exists) {
+                if (exists) {
+                    exec('echo "' + now.format("YYYYMMDDmmhhss") +'" >>/etc/timestamp' );
+                }
+            });
+            
         });
     };
 
