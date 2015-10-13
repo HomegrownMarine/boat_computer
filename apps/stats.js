@@ -1,0 +1,16 @@
+var usage = require('usage');
+
+exports.load = function(server, boatData, settings) {
+
+	var pid = process.pid; 
+	
+	// every minute broadcast the average cpu usage for current process
+	setInterval(function() {
+		usage.lookup(pid, { keepHistory: true }, function(err, result) {
+ 			if ( !err ) {
+ 				boatData.broadcast('PCPU,'+result.cpu.toFixed(0));
+ 			}
+		});
+	}, 60000);
+
+};
