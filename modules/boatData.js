@@ -107,6 +107,7 @@ BoatData.prototype.now = function() {
 
 // Broadcast a new piece of data.  If a NMEA message is supplied,
 // or generatable, it will be broadcast on the NMEA network as well
+// TODO: message should be given $ and x-sum?
 BoatData.prototype.broadcast = function(message, data) {
     if ( message !== null && !_.isString(message) ) {
         data = message;

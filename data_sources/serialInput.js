@@ -44,7 +44,7 @@ SerialInput.prototype.start = function() {
             parser: serialport.parsers.readline("\r\n")
         }, function() {
             _this._serialPortReady = true;
-            winston.info('%s: SerialPort Ready', _this._options.name);
+            winston.info('%s: SerialPort Ready', _this.name());
         });
 
     this.serialPort.on('data', _.bind(this.onNewLine, this));
