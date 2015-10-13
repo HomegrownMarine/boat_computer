@@ -59,7 +59,7 @@ function H2183CompassInput(options) {
                 });
 
                 _this.serialPort.open( function(error) {
-                    if (error) console.error("H2183Compass: high speed - error on open", error);
+                    if (error) { console.error("H2183Compass: high speed - error on open", error); }
                     onHighSpeedConnect();
                 });
 
@@ -84,10 +84,18 @@ function H2183CompassInput(options) {
         //listen for hdg message to ensure compass was correctly initialized.
         _this.on('message', hdgMessageWatcher);
     };
-    };
 
     this.start = function() {
         try {
+            //if we haven't received a hdg message in 30 seconds fail and exit.
+            setTimeout(function() {
+                if (!successfullHdgMessage) {
+                    console.error('no heading messages seen after 30 seconds.  Failing.');
+                    process.exit(3);
+                }
+            }, 30000);
+
+
             _this.serialPort = new SerialPort(_this._options.path, {
                     baudrate: 4800,
                     parser: serialport.parsers.readline("\r\n")
@@ -98,23 +106,15 @@ function H2183CompassInput(options) {
             });
 
             _this.serialPort.open( function(err) {
-                if (err) console.error("H2183Compass: low speed - error on open", err);
+                if (err) { console.error("H2183Compass: low speed - error on open", err); }
                 onLowSpeedConnect();
             });
-
-            //if we haven't received a hdg message in 30 seconds fail and exit.
-            setTimeout(function() {
-                if (!successfullHdgMessage) {
-                    console.fatal('no heading messages seen after 30 seconds.  Failing.');
-                    process.exit(3);
-                }
-            }, 30000);
-
         } catch (err) {
             console.error("H2183Compass: low speed - exception on open", err);
         }
     };
 }
+
 util.inherits(H2183CompassInput, SerialInput);
 
 H2183CompassInput.highSpeedCommands = function() {

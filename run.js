@@ -83,7 +83,10 @@ winston.info("starting boat_computer: PID "+process.pid);
 
 // boat data module
 var boatData = new BoatData(settings.get('dataSources'));
-boatData.start();
+setTimeout(function() {
+    boatData.start();
+}, 1500);
+
 
 var server = express();
 server.use(express.urlencoded());
