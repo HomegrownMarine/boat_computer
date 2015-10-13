@@ -89,6 +89,10 @@ boat_data is the interface to the boat's NMEA 0183 instrument system.  It can ei
 
 sending data to other apps and the instrument system is done by calling ```boat_data.broadcast(message,data)```.  If only message is specified, it will be sent only to the serial bus.  If data is specified, as a json object, it will be broadcast to the rest of the apps on your system.  If an encoder is specified for the data type, it will also be encoded into a NMEA sentence and broadcast over the serial bus.
 
+## TODO:
+	
+	- use homegrown nmea
+
 ## Next Steps
 
 - better installation scripts and instructions

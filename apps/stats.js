@@ -10,6 +10,9 @@ exports.load = function(server, boatData, settings) {
  			if ( !err ) {
  				boatData.broadcast('PCPU,'+result.cpu.toFixed(0));
  			}
+ 			else {
+ 				console.log(err);
+ 			}
 		});
 	}, 60000);
 
