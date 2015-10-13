@@ -27,8 +27,16 @@ function H2183CompassInput(options) {
 
     var _this = this;
 
+    var successfullHdgMessage = false;
+    var hdgMessageWatcher = function(message) {
+        if ( message.indexOf('HDG') > 0 ) {
+            successfullHdgMessage = true;
+            _this.removeListener('message', hdgMessageWatcher);
+        }
+    };
+
     var onLowSpeedConnect = function() {
-        winston.info('H2183Compass: onLowSpeedConnect');
+        console.info('H2183Compass: onLowSpeedConnect');
 
         // first, set baud to 38400
         var messages = ["PAMTX,0",              // disable, for setting baud
@@ -37,7 +45,7 @@ function H2183CompassInput(options) {
         _.each(messages, function(message) { _this.serialPort.write( nmea.format(message) + '\r\n' ); });
 
         setTimeout(function() {
-            // reconnect after 500ms
+            // reconnect after wait for compass to start talking at new baud
             _this.serialPort.close();
 
             try {
@@ -47,30 +55,35 @@ function H2183CompassInput(options) {
                     }, false);
 
                 _this.serialPort.on('error', function(error) {
-                    winston.error("H2183Compass: high speed - error event fired", error);
+                    console.error("H2183Compass: high speed - error event fired", error);
                 });
 
                 _this.serialPort.open( function(error) {
-                    if (error) winston.error("H2183Compass: high speed - error on open", error);
+                    if (error) console.error("H2183Compass: high speed - error on open", error);
                     onHighSpeedConnect();
                 });
 
             } catch (error) {
-                winston.error("H2183Compass: high speed - exception on open", error);
+                console.error("H2183Compass: high speed - exception on open", error);
             }
         }, 1000);
     };
 
     var onHighSpeedConnect = function() {
-        winston.info('H2183Compass: onHighSpeedConnect');
+        console.info('H2183Compass: SerialPort Ready');
 
         //set up message rates
         var messages = ['PAMTX,1']; // re-enable message transmission.
 
         _.each(messages, function(message) { _this.serialPort.write( nmea.format(message) + '\r\n' ); });
 
+        //
         _this.serialPort.on('data', _.bind(_this.onNewLine, _this));
         _this._serialPortReady = true;
+
+        //listen for hdg message to ensure compass was correctly initialized.
+        _this.on('message', hdgMessageWatcher);
+    };
     };
 
     this.start = function() {
@@ -80,17 +93,25 @@ function H2183CompassInput(options) {
                     parser: serialport.parsers.readline("\r\n")
                 }, false);
 
-            _this.serialPort.on('error', function(error) {
-                winston.error("H2183Compass: low speed - error event fired", error);
+            _this.serialPort.on('error', function(err) {
+                console.error("H2183Compass: low speed - error event fired", err);
             });
 
-            _this.serialPort.open( function(error) {
-                if (error) winston.error("H2183Compass: low speed - error on open", error);
+            _this.serialPort.open( function(err) {
+                if (err) console.error("H2183Compass: low speed - error on open", err);
                 onLowSpeedConnect();
             });
 
-        } catch (error) {
-            winston.error("H2183Compass: low speed - exception on open", error);
+            //if we haven't received a hdg message in 30 seconds fail and exit.
+            setTimeout(function() {
+                if (!successfullHdgMessage) {
+                    console.fatal('no heading messages seen after 30 seconds.  Failing.');
+                    process.exit(3);
+                }
+            }, 30000);
+
+        } catch (err) {
+            console.error("H2183Compass: low speed - exception on open", err);
         }
     };
 }
