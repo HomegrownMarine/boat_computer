@@ -170,8 +170,8 @@ if ( settings.get('syncSystemTime') ) {
         });
     };
 
-    //on GPS message, set the system time every 120 seconds
-    //to keep the system time in sync
-    setSystemTime();
-    setInterval(setSystemTime, 120000);
+    //NOTE: changing the system time can give node JS troubles, especially changing it to the past
+    //after some seconds, to give all serial ports time to establish their connections
+    //change the system time to match the GPS provided time
+    setTimeout(setSystemTime, 30000);
 }
