@@ -22,15 +22,33 @@ var handlebars = require('handlebars');
 exports.load = function(server, boatData, settings) {
     var dataDir = settings.get("logs:dataDir");
 
+    var currentStreamTime = null;
+    var currentStream = null;
+
+    //cache current write stream, and append to it
+    function getStreamForTime(time) {
+        time = time.startOf('hour');
+        if (!time.isSame(currentStreamTime)) {
+            //if our stream is changing, end old stream
+            if ( currentStream )
+                currentStream.end();
+
+            currentStreamTime = time;
+            currentStream = fs.createWriteStream(path.join(dataDir, time.format('YYMMDDHH')+'.txt'), { flags: 'a'})
+        }
+        return currentStream;
+    }
+
     // do logging
     if ( settings.get("logs:log") !== false ) {
         boatData.on('nmea', function(message) {
-            var filename = path.join(dataDir, moment().format('YYMMDDHH')+'.txt');
-            fs.appendFile(filename, message+'\r\n');
+            getStreamForTime(moment())
+                .write(message+'\r\n');
         });
     }
 
 
+    // log interface
     var indexTemplate = null;
     fs.readFile(path.join(__dirname,'templates/index.html'), {encoding:'utf8'}, function(err, data) {
         if (err) {
@@ -83,6 +101,7 @@ exports.load = function(server, boatData, settings) {
             res.send({'status':'ready', 'location': '/logs/'+day+'.zip'});
         }
         else if ( fs.existsSync(zipFile+'.tmp') ) {
+            //TODO: restart if not actively writing.
             res.send({'status':'archiving'});
         }
         else {
@@ -92,7 +111,10 @@ exports.load = function(server, boatData, settings) {
             var output = fs.createWriteStream(zipFile+'.tmp');
             var archive = archiver('zip');
 
-            output.on('close', function() {
+            archive.on('end', function() {
+                output.end();
+            });
+            output.on('finish', function() {
                 // rename temp file, archive can now be downloaded
                 fs.rename(__dirname + '/zips/' + day + '.zip.tmp', __dirname + '/zips/' + day + '.zip', function(err){
                     if (err) winston.error('Error renaming zip file.', err);    
