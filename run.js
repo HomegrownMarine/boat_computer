@@ -22,7 +22,6 @@ function loadApps(server, boatData, settings) {
     winston.info('Loading Apps');
 
     var disabledApps = settings.get('disabledApps') || [];
-
     var links = [];
 
     var apps = fs.readdirSync(path.join(__dirname,'apps/'));
@@ -119,14 +118,16 @@ function initializeWebserver() {
 
     // start up webserver
     server.set('port', settings.get('port'));
-    var server = server.listen(server.get('port'), function() {
-        winston.info('Express server listening on port ' + server.address().port);
+    server.listen(server.get('port'), function() {
+        winston.info('Express server listening on port ' + this.address().port);
     });
 
     return server;
 }
 
 function addServerDataRoutes(server, boatData) {
+    //console.info(server);
+
     //returns current set of data for boat
     server.get('/now', function(req, res) {
         res.send(boatData.now());
@@ -182,16 +183,17 @@ initializeWinston(winston, settings);
 //set up modules
 var boatData = initializeBoatData(settings.get('dataSources'), settings.get('syncSystemTime'));
 
-var server = initializeWebserver();
+var webServer = initializeWebserver();
 
-//load apps after 
 setTimeout(function() {
+//load apps after 
     //load installed apps
-    var apps = loadApps(server, boatData, settings);
+    var apps = loadApps(webServer, boatData, settings);
 
-    addServerDataRoutes(server, boatData);
-    addServerIndexPage(server, settings.get('boatName'), apps);
-}, 35000);
+    addServerDataRoutes(webServer, boatData);
+    addServerIndexPage(webServer, settings.get('boatName'), apps);
+
+}, 1000)
 
 
 

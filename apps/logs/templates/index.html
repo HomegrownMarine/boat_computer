@@ -4,21 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Logs</title>
-    <link rel="stylesheet" type="text/css" href="/css/main.css">
+    <link rel="stylesheet" href="/css/pure-min.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>    
-    <div class="header">
-        <h1>Logs</h1>
-    </div>
+    <header class="pure-g">
+        <div class="pure-u-1"><h1>Logs</h1></div>
+    </header>
     
-    <ul>
+    <div class="menu small pure-g">
         {{#log_days}}
-        <!-- Make the whole row tapable -->
-            <li>
-                <a href="{{filename}}">{{date}}</a>
-            </li>
+        <a class="pure-u-1" href="{{filename}}">{{date}}</a>
         {{/log_days}}
-    </ul>
+    </div>
+
     <script src="/lib/jquery.js"></script>
     <script>
         $(function() {

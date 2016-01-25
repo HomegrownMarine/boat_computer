@@ -1,1 +1,30 @@
-body{margin:0;padding:0;font-size:16px;font-family:Helvetica,sans-serif}h1{margin-top:10px}ul,li{margin:0;padding:0;list-style-type:none}ul{margin:0 10px}ul>li{display:block;border-bottom:1px dotted #666;margin:0;padding:0}ul>li:last-child{border-bottom:none !important}ul>li a{display:block;color:#000;text-decoration:none;font-weight:lighter;padding:10px 10px}ul.large{margin:0}ul.large>li{font-size:18px;border-bottom:1px solid #666;padding:0}ul.large>li a{font-weight:lighter;padding:20px}.header{background-color:#1e73be;color:#fffb00;margin:0}.header h1{margin:0;font-weight:normal;font-size:20px;padding:6px 10px}.cf:before,.cf:after{content:" ";display:table}.cf:after{clear:both}
+header {
+  background-color: #333;
+  color: #fff;
+}
+header h1 {
+  padding: 10px 10px;
+  margin: 0;
+  font-size: 20px;
+}
+.page-button {
+  text-align: right;
+}
+.page-button label {
+  margin: 5px;
+}
+.menu a {
+  padding: 20px;
+  font-size: 18px;
+  color: black;
+  text-decoration: none;
+  font-weight: lighter;
+  border-bottom: 1px solid #666;
+}
+.menu a:last-child {
+  border-bottom: none !important;
+}
+.menu.small a {
+  padding: 10px 20px;
+  font-size: 16px;
+}

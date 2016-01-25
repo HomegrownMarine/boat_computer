@@ -1,0 +1,9 @@
+# cat aliases >> ~/.bashrc
+
+echo -e "shortcuts: cdl-log dir\n cdr-data dir\n bcrs-restart bc\n bcs-stop bc\n bclog-bc sys logs"
+
+alias cdl="cd /race/data/logs"
+alias cdr="cd /race/data/raw"
+alias bcrs="systemctl restart boat_computer.service"
+alias bcs="systemctl stop boat_computer.service"
+alias bclog="less /var/log/syslog | grep boat_computer | tail -100"

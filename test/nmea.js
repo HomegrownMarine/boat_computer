@@ -116,14 +116,104 @@ describe('parsers', function() {
             assert.equal( expected.time.diff( data.time ), 0 )
         });
 
+        it('parsing should set the modules variation', function() {
+            var data = nmea.parse('$GPRMC,030000,A,4740.36415,N,12225.35953,W,000.02,059.5,160612,016.6,E*52');
+
+            assert.equal(-16.6, nmea.variation);
+        });
+
         it('should parse with decimal time')
         it('should parse without variation')
         it('should parse without cog and sog')
     });
 
     describe('HDG', function() {
+        it('should parse', function() {
+            nmea.variation = 0;
+
+            var data = nmea.parse('$HCHDG,192.5,0.0,E,,*26');
+            var expected = {
+                hdg: 192.5,
+                type: 'hdg'
+            };
+
+            data = _.pick(data, _.keys(expected));
+
+            assert.deepEqual(data, expected);
+        });
+
+        it('should adjust variation when parsing.', function() {
+            nmea.variation = -16.6;
+
+            var data = nmea.parse('$HCHDG,192.5,0.0,E,,*26');
+            var expected = {
+                hdg: 209.1,
+                type: 'hdg'
+            };
+
+            data = _.pick(data, _.keys(expected));
+
+            assert.deepEqual(data, expected);
+        });
+    });
+
+    describe('VHW', function() {
+        it('should parse', function() {
+            var data = nmea.parse('$IIVHW,,,,,4.87,N,9.03,K*4D');
+            var expected = {
+                speed: 4.87,
+                type: 'vhw'
+            };
+
+            data = _.pick(data, _.keys(expected));
+
+            assert.deepEqual(data, expected);
+        });
+    });
+
+    describe('VDR', function() {
         it('should parse');
-        it('should format');
+
+        it('should format', function() {
+            // var data = nmea.parse('$IIVHW,,,,,4.87,N,9.03,K*4D');
+            // var expected = {
+            //     speed: 4.87,
+            //     type: 'vdr'
+            // };
+
+            // data = _.pick(data, _.keys(expected));
+
+            // assert.deepEqual(data, expected);
+        });
+    });
+
+    describe('XDR', function() {
+        it('should parse', function() {
+            var data = nmea.parse('$YXXDR,A,0.4,D,PTCH,A,-4.0,D,ROLL*70');
+            var expected = {
+                pitch: 0.4,
+                heel: -4.0,
+                type: 'xdr'
+            };
+
+            data = _.pick(data, _.keys(expected));
+
+            assert.deepEqual(data, expected);
+        });
+    });
+
+    describe('DPT', function() {
+        it('should parse', function() {
+            var data = nmea.parse('$IIDPT,075.1,-1.0,*43');
+            var expected = {
+                depth: 75.1,
+                type: 'dpt'
+            };
+
+            data = _.pick(data, _.keys(expected));
+
+            assert.deepEqual(data, expected);
+        });
     });
 
     describe('MWV', function() {

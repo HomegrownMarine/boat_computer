@@ -4,40 +4,29 @@
         <title>Sailing Documents</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <link rel="stylesheet" type="text/css" href="/css/main.css">
+        
+        <link rel="stylesheet" href="/css/pure-min.css">
+        <link rel="stylesheet" href="/css/main.css">
+        
         <style>
-            form {
-                float: right;
-                padding: 10px 10px;
-                background-color: #333;
-                color: #fff;
-            }
-
-            form label {
-                cursor: pointer;
-                padding: 10px 12px;
-            }
-
-            h1 {
-                float: left;
-            }
+            
         </style>
     </head>
-    <body>
-        <div class="header cf">
-            <h1>Sailing Documents</h1>
-            <form method="post" action="/docs/upload" enctype="multipart/form-data">
-                <label> Upload
+    <body class="">
+        <header class="pure-g">
+            <div class="pure-u-4-5"><h1>Sailing Documents</h1></div>
+            <form class="pure-u-1-5 page-button" method="post" action="/docs/upload" enctype="multipart/form-data">
+                <label class="pure-button pure-button-primary"> Upload
                     <input type="file" name="doc" id="manualUpload" style="display:none;">
                 </label>
             </form>
-        </div>
+        </header>
         
-        <ul>
+        <div class="menu small pure-g">
         {{#docs}}
-            <li><a href="{{link}}">{{name}}</a></li>
+        <a  class="pure-u-1" href="{{link}}">{{name}}</a>
         {{/docs}}
-        </ul>
+        </div>
 
         <script src="/lib/jquery.js"></script>
         <script>

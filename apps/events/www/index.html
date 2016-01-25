@@ -4,59 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Events</title>
-    <link rel="stylesheet" type="text/css" href="/css/main.css">
-    <link rel="stylesheet" type="text/css" href="css/events.css">
+    <link rel="stylesheet" href="/css/pure-min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .rigtune {
+            background-color: #E8CBF4;
+        }
+
+        .section {
+            padding: 10px 20px;
+        }
+    </style>
 </head>
 <body>
-    <ul class="large primary">
-        <li class="rigtune">
-            <h2>Rig Tune</h2>
-            <div class="content">
-                <form>
-                    <ul class="secondary">
-                        <li>
-                            <span class="label h">H</span> <input type="number" name="H">
-                            <span class="plus" for="H">+</span><span class="minus" for="H">-</span>
-                        </li>
-                        <li>
-                            <span class="plus" for="PV">+</span><span class="minus" for="PV">-</span>
-                            <input type="number" name="PV" data-step=".5">
-                            <span class="label">V</span>
-                            <input type="number" name="SV" data-step=".5">
-                            <span class="plus" for="SV">+</span><span class="minus" for="SV">-</span>
-                        </li>
-                        <li>
-                            <span class="plus" for="PD1">+</span><span class="minus" for="PD1">-</span>
-                            <input type="number" name="PD1" data-step=".5">
-                            <span class="label">D1</span>
-                            <input type="number" name="SD1" data-step=".5">
-                            <span class="plus" for="SD1">+</span><span class="minus" for="SD1">-</span>
-                        </li>
-                        <li>
-                            <span class="plus" for="PD2">+</span><span class="minus" for="PD2">-</span>
-                            <input type="number" name="PD2" data-step=".5">
-                            <span class="label">D2</span> 
-                            <input type="number" name="SD2" data-step=".5">
-                            <span class="plus" for="SD2">+</span><span class="minus" for="SD2">-</span>
-                        </li>
-                    </ul>
-                </form>
-            </div>
-        </li>
-<!--
-        <li class="sails">
-            <h2>Sails</h2>
-            <div class="content">
-            </div>
-        </li>
+    <div id="rigtune" class="section pure-g">
+        <h2 class="pure-u-1">Rig Tune</h2>
+        <div class="pure-u-1 content">
+            <form class="pure-form pure-form-aligned">
+                <div class="pure-control-group">
+                    <label class="label">H</label> 
+                    <input type="number" name="H" class="pure-u-1-12" data-step="1">
+                    
+                    <span class="button-small pure-button plus" for="H">+</span>
+                    <span class="button-small pure-button minus" for="H">-</span>
+                </div>
 
-        <li class="other">
-            <h2>Other</h2>
-            <div class="content">
-            </div>      
-        </li>
--->
-    </ul>
+                <fieldset>
+                    <legend>Port</legend>
+                    <div class="pure-control-group">
+                        <label class="label">V</label> 
+                        <input type="number" name="PV" class="pure-u-1-12">
+                        
+                        <span class="button-small pure-button plus" for="PV">+</span>
+                        <span class="button-small pure-button minus" for="PV">-</span>
+                    </div>
+                    <div class="pure-control-group">
+                        <label class="label">D1</label> 
+                        <input type="number" name="PD1" class="pure-u-1-12">
+                        
+                        <span class="button-small pure-button plus" for="PD1">+</span>
+                        <span class="button-small pure-button minus" for="PD1">-</span>
+                    </div>
+                    <div class="pure-control-group">
+                        <label class="label">D2</label> 
+                        <input type="number" name="PD2" class="pure-u-1-12">
+                        
+                        <span class="button-small pure-button plus" for="PD2">+</span>
+                        <span class="button-small pure-button minus" for="PD2">-</span>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Starboard</legend>
+                    <div class="pure-control-group">
+                        <label class="label">V</label> 
+                        <input type="number" name="SV" class="pure-u-1-12">
+                        
+                        <span class="button-small pure-button plus" for="SV">+</span>
+                        <span class="button-small pure-button minus" for="SV">-</span>
+                    </div>
+                    <div class="pure-control-group">
+                        <label class="label">D1</label> 
+                        <input type="number" name="SD1" class="pure-u-1-12">
+                        
+                        <span class="button-small pure-button plus" for="SD1">+</span>
+                        <span class="button-small pure-button minus" for="SD1">-</span>
+                    </div>
+                    <div class="pure-control-group">
+                        <label class="label">D2</label> 
+                        <input type="number" name="SD2" class="pure-u-1-12">
+                        
+                        <span class="button-small pure-button plus" for="SD2">+</span>
+                        <span class="button-small pure-button minus" for="SD2">-</span>
+                    </div>
+                </fieldset>                    
+            </form>
+        </div>
 
     <script src="/lib/jquery.js"></script>
     <script src="/lib/underscore.js"></script>
@@ -71,7 +93,8 @@
                     cache: false,
                     success: function(d) { 
                         _.each(d, function(dataset, key) {
-                            var section = $('.'+key);
+                            var section = $('#'+key);
+                            console.info('key', key)
                             _.each(dataset, function(datum, name) {
                                 section.find('[name='+name+']').val(datum);
                             });
@@ -87,7 +110,7 @@
 
                 var forName = $this.attr('for');
                 var target = $this.siblings('[name='+forName+']');
-                var change = ($this.hasClass('plus')?1:-1) * (parseFloat(target.data('step'))||1);
+                var change = ($this.hasClass('plus')?1:-1) * (parseFloat(target.data('step'))||.5);
 
                 target
                     .val( parseFloat(target.val()) + change )
@@ -98,7 +121,7 @@
             $('input').change(function() {
                 var key = 'rigtune';
                 var data = {};
-                $('.rigtune input').each( function() { 
+                $('#rigtune input').each( function() { 
                     data[this.name] = this.value;
                 });
 

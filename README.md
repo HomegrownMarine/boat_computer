@@ -98,3 +98,6 @@ sending data to other apps and the instrument system is done by calling ```boat_
 - better installation scripts and instructions
 - support for NMEA 2000 and [signal k](https://signalk.github.io)
 - more apps
+- move log zip dir to tmp
+- move docs dir to somewhere else.
+

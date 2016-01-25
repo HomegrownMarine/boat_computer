@@ -25,6 +25,7 @@ exports.load = function(server, boatData, settings) {
     boatData.on('data', function(data) {
         var syntheticData = {};
 
+        // call calculation functions on new data point
         _.each(functions, function(f) {
             var result = f(_.assign({}, data, syntheticData));
 
@@ -33,10 +34,12 @@ exports.load = function(server, boatData, settings) {
             }
         });
 
+        //if any of the functions had results, broadcast them
         if ( _.size(syntheticData) ) {
             boatData.broadcast(syntheticData);
         }
 
+        //calc set and drift seperately.
         var set = setX(data);
         var drift = driftX(data);
         if (set) {
