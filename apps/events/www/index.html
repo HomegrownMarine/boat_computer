@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Events</title>
     <link rel="stylesheet" href="/css/pure-min.css">
+    <link rel="stylesheet" href="/css/grids-responsive-min.css">
     <link rel="stylesheet" href="/css/main.css">
     <style>
         .rigtune {
@@ -14,64 +15,90 @@
         .section {
             padding: 10px 20px;
         }
+
+        input[type=number] {
+            width: 5em;
+            display: inline-block !important;
+        }
+
+        .row {
+            margin-bottom: .5em;
+        }
     </style>
 </head>
 <body>
     <div id="rigtune" class="section pure-g">
         <h2 class="pure-u-1">Rig Tune</h2>
         <div class="pure-u-1 content">
-            <form class="pure-form pure-form-aligned">
-                <div class="pure-control-group">
+            <form class="pure-form pure-g">
+                <div class="row pure-u-1-3 pure-u-md-1-5">
                     <label class="label">H</label> 
-                    <input type="number" name="H" class="pure-u-1-12" data-step="1">
+                </div>
+                <div class="row pure-u-2-3 pure-u-md-4-5">
+                    <input type="number" name="H" data-step="1">
                     
                     <span class="button-small pure-button plus" for="H">+</span>
                     <span class="button-small pure-button minus" for="H">-</span>
                 </div>
 
                 <fieldset>
-                    <legend>Port</legend>
-                    <div class="pure-control-group">
+                    <legend class="pure-u-1">Port</legend>
+                    
+                    <div class="row pure-u-1-3 pure-u-md-1-5">
                         <label class="label">V</label> 
-                        <input type="number" name="PV" class="pure-u-1-12">
+                    </div>
+                    <div class="row pure-u-2-3 pure-u-md-4-5">
+                        <input type="number" name="PV">
                         
                         <span class="button-small pure-button plus" for="PV">+</span>
                         <span class="button-small pure-button minus" for="PV">-</span>
                     </div>
-                    <div class="pure-control-group">
+                    
+                    <div class="row pure-u-1-3 pure-u-md-1-5">
                         <label class="label">D1</label> 
-                        <input type="number" name="PD1" class="pure-u-1-12">
+                    </div>
+                    <div class="row pure-u-2-3 pure-u-md-4-5">
+                        <input type="number" name="PD1">
                         
                         <span class="button-small pure-button plus" for="PD1">+</span>
                         <span class="button-small pure-button minus" for="PD1">-</span>
                     </div>
-                    <div class="pure-control-group">
+
+                    <div class="row pure-u-1-3 pure-u-md-1-5">
                         <label class="label">D2</label> 
-                        <input type="number" name="PD2" class="pure-u-1-12">
+                    </div>
+                    <div class="row pure-u-2-3 pure-u-md-4-5">
+                        <input type="number" name="PD2">
                         
                         <span class="button-small pure-button plus" for="PD2">+</span>
                         <span class="button-small pure-button minus" for="PD2">-</span>
                     </div>
                 </fieldset>
                 <fieldset>
-                    <legend>Starboard</legend>
-                    <div class="pure-control-group">
+                    <legend class="pure-u-1">Starboard</legend>
+                    <div class="row pure-u-1-3 pure-u-md-1-5">
                         <label class="label">V</label> 
-                        <input type="number" name="SV" class="pure-u-1-12">
+                    </div>
+                    <div class="row pure-u-2-3 pure-u-md-4-5"> 
+                        <input type="number" name="SV">
                         
                         <span class="button-small pure-button plus" for="SV">+</span>
                         <span class="button-small pure-button minus" for="SV">-</span>
                     </div>
-                    <div class="pure-control-group">
-                        <label class="label">D1</label> 
-                        <input type="number" name="SD1" class="pure-u-1-12">
+                    <div class="row pure-u-1-3 pure-u-md-1-5">
+                        <label class="label">D1</label>  
+                    </div>
+                    <div class="row pure-u-2-3 pure-u-md-4-5">
+                        <input type="number" name="SD1">
                         
                         <span class="button-small pure-button plus" for="SD1">+</span>
                         <span class="button-small pure-button minus" for="SD1">-</span>
                     </div>
-                    <div class="pure-control-group">
-                        <label class="label">D2</label> 
-                        <input type="number" name="SD2" class="pure-u-1-12">
+                    <div class="row pure-u-1-3 pure-u-md-1-5">
+                        <label class="label">D2</label>  
+                    </div>
+                    <div class="row pure-u-2-3 pure-u-md-4-5">
+                        <input type="number" name="SD2">
                         
                         <span class="button-small pure-button plus" for="SD2">+</span>
                         <span class="button-small pure-button minus" for="SD2">-</span>
