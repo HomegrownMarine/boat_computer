@@ -222,7 +222,7 @@ parsers.MWV = {
         
         return data;
     },
-    format: function() {
+    format: function(data) {
         var parts = [
             "IIMWV",
             data.twa.toFixed(1),
@@ -352,6 +352,20 @@ parsers.XDR = {
             pitch: +parts[2],
             heel: +parts[6]
         };
+    }
+};
+
+
+// generic data message
+parsers.DATA = {
+    format: function(data) {
+        var parts = [
+            "DATA",
+            data.subtype,
+            _.map(data.values, function(value, key) { return key+'='+value; }).join(',')
+        ];
+
+        return parts.join(',');
     }
 };
 

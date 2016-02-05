@@ -40,6 +40,10 @@ describe('validate', function() {
     });
 });
 
+describe('formatters', function() {
+    it('data');
+});
+
 describe('parsers', function() {
     it('should not parse invalid emails', function() {
         assert.isNull( nmea.parse('$GPRMC,204658,A,4740.2949,N,12228.5660,W,006.4,300.8,100410,018.2*0A') );
