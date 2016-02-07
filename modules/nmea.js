@@ -362,7 +362,7 @@ parsers.DATA = {
         var parts = [
             "DATA",
             data.subtype,
-            _.map(data.values, function(value, key) { return key+'='+value; }).join(',')
+            data.values.join(',')
         ];
 
         return parts.join(',');
