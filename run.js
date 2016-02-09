@@ -141,15 +141,12 @@ initializeWinston(winston, settings);
 
 //set up modules
 var boatData = initializeBoatData(settings.get('dataSources'), settings.get('syncSystemTime'));
-
 var webServer = initializeWebserver();
 
 setTimeout(function() {
-//load apps after 
     //load installed apps
     var apps = loadApps(webServer, boatData, settings);
 
-    addServerDataRoutes(webServer, boatData);
     addServerIndexPage(webServer, settings.get('boatName'), apps);
 
 }, 1000)

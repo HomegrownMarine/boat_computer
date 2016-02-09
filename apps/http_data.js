@@ -37,6 +37,7 @@ exports.load = function(server, boatData, settings) {
         //on connection close, remove from list of active streams
         req.on('close', function() {
             streamConnections = _.without(streamConnections, res);
+            console.info('open connection count', streamConnections.length);
         });
     });
 };
